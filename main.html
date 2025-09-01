@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>OT Scanner</title>
+
+  <!-- Firebase compat SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.3/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.3/firebase-database-compat.js"></script>
+
+  <!-- QR Scanner -->
+  <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
+
+  <style>
+    body { font-family: Arial, sans-serif; text-align: center; padding: 20px; }
+    #reader { width: 300px; margin: auto; }
+    .log { margin-top: 20px; font-size: 18px; color: green; }
+  </style>
+</head>
+<body>
+  <h2>OT Parent QR Scanner</h2>
+  <div id="reader"></div>
+	<p id="Cooldown">Cooldown: 5 sec</p>
+  <div class="log" id="log"></div>
+
+  <script>
+    // Firebase config
+    const firebaseConfig = {
+      apiKey: "AIzaSyAqjFBhcYZmymEcxFf4G_9Wbk78FD2Fqm4",
+      authDomain: "otscanneralerter.firebaseapp.com",
+      databaseURL: "https://otscanneralerter-default-rtdb.asia-southeast1.firebasedatabase.app",
+      projectId: "otscanneralerter",
+      storageBucket: "otscanneralerter.firebasestorage.app",
+      messagingSenderId: "686097644253",
+      appId: "1:686097644253:web:6f722bf4e7675ba454b934",
+      measurementId: "G-T13J4GN8V2"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+
+    const logEl = document.getElementById("log");
+
+    // --- Throttle control ---
+    let lastScanTime = 0;
+    const SCAN_COOLDOWN = 5000; // 5 seconds
+
+    function onScanSuccess(decodedText) {
+      const now = Date.now();
+      if (now - lastScanTime < SCAN_COOLDOWN) {
+        console.log("⏳ Ignored scan (cooldown active)");
+        return;
+      }
+      lastScanTime = now;
+
+			setTimeout(() => {
+      	logEl.textContent = "Scanned: " + decodedText;
+			}, 3000);
+
+      let parts = decodedText.split(" - ");
+      let year = parts[0];
+      let studentName = parts[1];
+      let classSection = parts[2];
+      let classTeacher = parts[3];
+      console.log(year, studentName, classSection, classTeacher);
+
+      const callsRef = db.ref("calls");
+      callsRef.push({
+        studentName,
+        classSection,
+        classTeacher,
+        timestamp: Date.now()
+      });
+    }
+
+    const html5QrCode = new Html5Qrcode("reader");
+    Html5Qrcode.getCameras().then(cameras => {
+      if (cameras && cameras.length) {
+        html5QrCode.start(
+          cameras[0].id,
+          { fps: 10, qrbox: 250 },
+          onScanSuccess
+        );
+      }
+    });
+		function disabled() {
+			
+		}
+  </script>
+</body>
+</html>
