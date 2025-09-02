@@ -10,7 +10,92 @@
 	--btn-hover-clr:hsl(240, 100%, 75%);
 	--btn-clr:hsl(240, 100%, 70%);
 }
+/* Orbitron – Futuristic and sleek */
+.font-orbitron {
+  font-family: 'Orbitron', sans-serif;
+}
 
+/* Share Tech Mono – Techy and readable */
+.font-sharetech {
+  font-family: 'Share Tech Mono', monospace;
+}
+
+/* Rajdhani – Rounded and modern */
+.font-rajdhani {
+  font-family: 'Rajdhani', sans-serif;
+}
+
+/* Press Start 2P – Pixelated retro */
+.font-pressstart {
+  font-family: 'Press Start 2P', cursive;
+}
+
+/* Major Mono Display – Minimalist mono */
+.font-major {
+  font-family: 'Major Mono Display', monospace;
+}
+
+/* VT323 – Terminal-style retro */
+.font-vt323 {
+  font-family: 'VT323', monospace;
+}
+
+/* Rubik Mono One – Bold and geometric */
+.font-rubikmono {
+  font-family: 'Rubik Mono One', sans-serif;
+}
+
+/* /////////////////////////////////////////////////////////////////////////////////////////////////////// */
+
+/* Inter – Modern and neutral */
+.font-inter {
+	font-family: 'Inter', sans-serif;
+}
+
+/* Roboto – Friendly and versatile */
+.font-roboto {
+	font-family: 'Roboto', sans-serif;
+}
+
+/* Open Sans – Clean and open */
+.font-opensans {
+	font-family: 'Open Sans', sans-serif;
+}
+
+/* Lato – Rounded and warm */
+.font-lato {
+	font-family: 'Lato', sans-serif;
+}
+
+/* Nunito – Soft and readable */
+.font-nunito {
+	font-family: 'Nunito', sans-serif;
+}
+
+/* Source Sans Pro – Professional and balanced */
+.font-source {
+	font-family: 'Source Sans Pro', sans-serif;
+}
+
+/* Work Sans – Optimized for screens */
+.font-work {
+	font-family: 'Work Sans', sans-serif;
+}
+
+/* IBM Plex Sans – Techy but clean */
+.font-ibmplex {
+	font-family: 'IBM Plex Sans', sans-serif;
+}
+
+/* Manrope – Minimalist and spacious */
+.font-manrope {
+	font-family: 'Manrope', sans-serif;
+}
+
+/* Mulish – Lightweight and elegant */
+.font-mulish {
+	font-family: 'Mulish', sans-serif;
+}
 body {
 	font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 	text-align: center;
@@ -33,15 +118,30 @@ h1 {
 	background: #222;
 	border-radius: 8px;
 }
+.overlay {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	/* background: rgba(0, 0, 0, 0.8); */
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	pointer-events: none;
+}
 #clock {
 	position: fixed;
+	border-radius: 10px;
+	border: 1px solid var(--line-clr);
+	margin: 10px;
 	bottom: 0;
-	width: 100%;
+	width: 95%;
 	font-size: 24px;
 	padding: 15px;
-	background: #000;
+	background: var(--btn-clr);
 }
-div:not(#clock) {
+div:not(#calls, .overlay, #clock) {
 	margin: 20px;
 	padding: 10px;
 	padding-bottom: 0;

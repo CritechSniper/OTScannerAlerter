@@ -1,0 +1,14 @@
+body {
+	font-family: Arial, sans-serif;
+	text-align: center;
+	padding: 20px;
+}
+#reader {
+	width: 300px;
+	margin: auto;
+}
+.log {
+	margin-top: 20px;
+	font-size: 18px;
+	color: green;
+}
