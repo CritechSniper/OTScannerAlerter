@@ -1,0 +1,102 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+:root {
+	--base-clr:#11121a;
+	--line-clr:#42434a;
+	--hover-clr:#222533;
+	--text-clr:#e6e6ef;
+	--acent-clr:#5e63ff;
+	--secondary-text-clr:#b0b3c1;
+	--btn-hover-clr:hsl(240, 100%, 75%);
+	--btn-clr:hsl(240, 100%, 70%);
+}
+/* Orbitron – Futuristic and sleek */
+.font-orbitron {
+  font-family: 'Orbitron', sans-serif;
+}
+
+/* Share Tech Mono – Techy and readable */
+.font-sharetech {
+  font-family: 'Share Tech Mono', monospace;
+}
+
+/* Rajdhani – Rounded and modern */
+.font-rajdhani {
+  font-family: 'Rajdhani', sans-serif;
+}
+
+/* Press Start 2P – Pixelated retro */
+.font-pressstart {
+  font-family: 'Press Start 2P', cursive;
+}
+
+/* Major Mono Display – Minimalist mono */
+.font-major {
+  font-family: 'Major Mono Display', monospace;
+}
+
+/* VT323 – Terminal-style retro */
+.font-vt323 {
+  font-family: 'VT323', monospace;
+}
+
+/* Rubik Mono One – Bold and geometric */
+.font-rubikmono {
+  font-family: 'Rubik Mono One', sans-serif;
+}
+
+/* /////////////////////////////////////////////////////////////////////////////////////////////////////// */
+
+/* Inter – Modern and neutral */
+.font-inter {
+	font-family: 'Inter', sans-serif;
+}
+
+/* Roboto – Friendly and versatile */
+.font-roboto {
+	font-family: 'Roboto', sans-serif;
+}
+
+/* Open Sans – Clean and open */
+.font-opensans {
+	font-family: 'Open Sans', sans-serif;
+}
+
+/* Lato – Rounded and warm */
+.font-lato {
+	font-family: 'Lato', sans-serif;
+}
+
+/* Nunito – Soft and readable */
+.font-nunito {
+	font-family: 'Nunito', sans-serif;
+}
+
+/* Source Sans Pro – Professional and balanced */
+.font-source {
+	font-family: 'Source Sans Pro', sans-serif;
+}
+
+/* Work Sans – Optimized for screens */
+.font-work {
+	font-family: 'Work Sans', sans-serif;
+}
+
+/* IBM Plex Sans – Techy but clean */
+.font-ibmplex {
+	font-family: 'IBM Plex Sans', sans-serif;
+}
+
+/* Manrope – Minimalist and spacious */
+.font-manrope {
+	font-family: 'Manrope', sans-serif;
+}
+
+/* Mulish – Lightweight and elegant */
+.font-mulish {
+	font-family: 'Mulish', sans-serif;
+}
+
+*:hover{
+    cursor: default;
+}
