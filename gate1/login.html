@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <link rel="stylesheet" href="login.css">
+  <link rel="stylesheet" href="css.css">
+</head>
+<body>
+  <div class="idk1"></div>
+  <div class="idk2"></div>
+  <div class="d1">
+    <img src="../OIP.jpg" title="Logo" id="Logo" style="display: block;" />
+    <div class="d2">
+      <label for="gateInput">Gate No.</label>
+      <input type="text" id="gateInput" autocomplete="off" required />
+      <button id="gateSelectBtn">Choose</button>
+    </div>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.5.0/firebase-app.js";
+    import { getAuth } from "https://www.gstatic.com/firebasejs/11.5.0/firebase-auth.js";
+    import { getDatabase, get, ref } from "https://www.gstatic.com/firebasejs/11.5.0/firebase-database.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyClGVm-i4aOwMIvo6KV_GTDRNQkBwGM7aM",
+      authDomain: "mine-a375c.firebaseapp.com",
+      databaseURL: "https://mine-a375c-default-rtdb.asia-southeast1.firebasedatabase.app",
+      projectId: "mine-a375c",
+      storageBucket: "mine-a375c.appspot.com",
+      messagingSenderId: "117217183864",
+      appId: "1:117217183864:web:7f4aef099993670121458d",
+      measurementId: "G-CPYBHFPGPX"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getDatabase(app);
+
+    const handleGateLogin = async (gateKey, redirectPath, storageKey) => {
+      const gateData = await get(ref(db, gateKey));
+      const gateCode = gateData.exists() ? String(gateData.val()) : null;
+      const pinInput = document.getElementById('pinInput').value;
+
+      if (pinInput === gateCode) {
+        localStorage.setItem(storageKey, "The user is logged in");
+        window.location.href = redirectPath;
+      } else {
+        alert("Incorrect pin. Try again.");
+      }
+    };
+
+    document.getElementById('gateSelectBtn').addEventListener('click', () => {
+      const gateVal = document.getElementById('gateInput').value.trim();
+      const d2 = document.querySelector('.d2');
+
+      if (gateVal === "1") {
+        d2.innerHTML = `
+          <label for="pinInput">Enter Pin</label><br>
+          <input type="text" id="pinInput" autocomplete="off" required /><br>
+          <button id="loginBtn">Login</button>
+        `;
+        document.getElementById('loginBtn').addEventListener('click', () => {
+          handleGateLogin("Gate1", "./main2.html", "LoggedInGate1");
+        });
+      } else if (gateVal === "2") {
+        d2.innerHTML = `
+          <label for="pinInput">Enter Pin</label><br>
+          <input type="text" id="pinInput" autocomplete="off" required /><br>
+          <button id="loginBtn">Login</button>
+        `;
+        document.getElementById('loginBtn').addEventListener('click', () => {
+          handleGateLogin("Gate2", "./gate2/main.html", "LoggedInGate2");
+        });
+      } else {
+        alert("Invalid gate number. Please enter 1 or 2.");
+      }
+    });
+  </script>
+</body>
+</html>

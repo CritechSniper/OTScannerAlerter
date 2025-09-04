@@ -64,11 +64,11 @@ body {
 }
 .idk1 {
   transform: rotate(25deg); 
-  animation: i 4s infinite ease-in-out; 
+  animation: i 2s infinite ease-in-out; 
 }
 .idk2 {
   transform: rotate(-25deg);
-  animation: i2 4s infinite ease-in-out; /* for duration and easing */
+  animation: i2 2s infinite ease-in-out; /* for duration and easing */
   right: 0px; bottom: 0px;
 }
 @keyframes i {

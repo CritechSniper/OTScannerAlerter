@@ -7,5 +7,5 @@ const twentyFourHours = 24 * 60 * 60 * 1000;
 if (!granted || !grantedTime || now - grantedTime > twentyFourHours) {
   sessionStorage.removeItem("access");
   sessionStorage.removeItem("accessTime");
-  window.location.href = "login.html"; 
+  window.location.href = "../login.html"; 
 }
