@@ -19,10 +19,17 @@
 //         if ((e.ctrlKey && e.shiftKey) && 
 //             (e.key === "I" || e.key === "C" || e.key === "J")) {
 //             e.preventDefault();
-//             window.location.href = "https://www.google.com/search?q=You+have+been+redirected";
+//             window.location.href = "https://www.google.com/search?q=You+have+been+kicked";
 //             return false;
 //         }
 //     }
 // });
 // document.addEventListener('contextmenu', e => e.preventDefault());
 // document.addEventListener('selectstart', e => e.preventDefault());
+
+document.addEventListener('keydown', event => {
+  if ( event.key.toLowerCase() === "h") {
+    const logo = document.getElementById('Logo')
+    logo.style.display = (logo.style.display === "none") ? "block" : "none";
+  }
+})

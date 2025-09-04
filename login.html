@@ -11,17 +11,18 @@
   <div class="idk1"></div>
   <div class="idk2"></div>
   <div class="d1">
-    <img src="OIP.jpg" title="Logo" id="Logo">
+    <img src="OIP.jpg" title="Logo" id="Logo" style="display: block;">
     <div class="d2">
       <label for="int">Gate No.</label>
       <input type="text" id="int" autocomplete="off" required>
-      <button id="whyAreYouInspectingHuh">Login</button>
+      <button id="whyAreYouInspectingHuh">Choose</button>
     </div>
   </div>
 </body>
   <script src="./js.js"></script>
   <script type="module">
-    if (localStorage.getItem("LoggedIn")) { window.location.href = "main2.html"}
+    if (localStorage.getItem('LoggedIn')) window.location.href = "main2.html"
+
     import { getAuth } from "https://www.gstatic.com/firebasejs/11.5.0/firebase-auth.js";
     import { getDatabase, get, ref, set } from "https://www.gstatic.com/firebasejs/11.5.0/firebase-database.js";
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.5.0/firebase-app.js";
@@ -40,17 +41,41 @@
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
     const db = getDatabase(app);
-    const r = ref(db, "Gate1")
-    const cg1 = await get(ref(db, "Gate1")) // When u r seeing this, there is another gate with Gate2 as the key and vlue as something 
-    const cg1c = cg1.exists() ? String(cg1.val()) : "Error not found D:"
-    console.log(cg1c)
-    const check = () => {if (document.getElementById('int').value === cg1c && typeof "string") {
-      alert("Success in gaining access")
-      const date = new Date()
-      localStorage.setItem("LoggedIn", "The user is logged in") //Not necessary but you can check it in other html files i this exists or not so you can redirect it to this page
-      localStorage.setItem("LoggedInTime", date) // if logged was over one day the timer will reset to the next day
-    }}
-    document.getElementById('whyAreYouInspectingHuh').addEventListener('click', e => {check()})
-
+    const checkcg1c = async () => {
+      const cg1 = await get(ref(db, "Gate1")) // When u r seeing this, there is another gate with Gate2 as the key and vlue as something 
+      const cg1c = cg1.exists() ? String(cg1.val()) : "Error not found D:"
+      if (document.getElementById('int').value === cg1c && typeof "string") {
+        alert("Success in gaining access")
+        const date = new Date()
+        localStorage.setItem("LoggedIn", "The user is logged in") //Not necessary but you can check it in other html files i this exists or not so you can redirect it to this page
+        localStorage.setItem("LoggedInTime", date) // if logged was over one day the timer will reset to the next day
+      }
+    }
+    const checkcg2c = async () => {
+      const cg1 = await get(ref(db, "Gate2")) // When u r seeing this, there is another gate with Gate2 as the key and vlue as something 
+      const cg1c = cg1.exists() ? String(cg1.val()) : "Error not found D:"
+      if (document.getElementById('int').value === cg1c && typeof "string") {
+        alert("Success in gaining access")
+        const date = new Date()
+        localStorage.setItem("LoggedIn", "The user is logged in") //Not necessary but you can check it in other html files i this exists or not so you can redirect it to this page
+        localStorage.setItem("LoggedInTime", date) // if logged was over one day the timer will reset to the next day
+      }
+    }
+    
+    document.getElementById('whyAreYouInspectingHuh').addEventListener('click', () => {
+      if (document.getElementById('int').value === "1" && typeof "string") {
+        const d2 = document.querySelector('.d2')
+        d2.innerHTML = `<label for="int">Enter Pin</label><br><input type="text" id="int" autocomplete="off" required><br><button id="btnph2">Login</button>`
+        setTimeout(()=>{
+          document.getElementById('btnph2').addEventListener('click', ()=>{ checkcg1c(); window.location.href="main.html" }) // change this to what you like the main3.html file or smth like that
+        }, 1500)
+      } else if (document.getElementById('int').value === "2" && typeof "string") {
+        const d2 = document.querySelector('.d2')
+        d2.innerHTML = `<label for="int">Enter Pin</label><br><input type="text" id="int" autocomplete="off" required><br><button id="btnph3">Login</button>`
+        setTimeout(()=>{
+          document.getElementById('btnph3').addEventListener('click', ()=>{ checkcg2c(); window.location.href="main.html" })
+        }, 1500)
+      } 
+    })
   </script>
 </html>
