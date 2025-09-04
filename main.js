@@ -82,3 +82,4 @@ Html5Qrcode.getCameras().then(cameras => {
     onScanSuccess
   );
 });
+

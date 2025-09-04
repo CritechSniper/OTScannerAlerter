@@ -56,3 +56,8 @@ div.h2, div.p {
 	margin: 0;
 	padding: 0;
 }
+/* Remove it if you want but the latest user will be put on the top for everyone to see it */
+#calls {
+	display: flex;
+	flex-direction: column;
+}
