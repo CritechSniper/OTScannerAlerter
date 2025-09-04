@@ -4,21 +4,54 @@
   <meta charset="UTF-8">
   <title>OT Scanner</title>
 
-  <!-- Firebase compat SDKs -->
   <script src="https://www.gstatic.com/firebasejs/10.12.3/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.3/firebase-database-compat.js"></script>
 
-  <!-- QR Scanner -->
   <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
 
-	<link rel="stylesheet" href="main.css">
+  <link rel="stylesheet" href="main.css">
 </head>
 <body>
-  <h2>OT Parent QR Scanner</h2>
-  <div id="reader"></div>
-	<p id="Cooldown">Cooldown: 5 sec</p>
-  <div class="log" id="log"></div>
+  <h1>📷 OT Parent QR Scanner</h1>
+
+  <div class="scanner-container">
+    <div id="reader"></div>
+    <select id="cameraSelect"></select>
+  </div>
+
+  <p id="Cooldown">✅ Ready to scan</p>
+
+  <div class="log-container">
+    <h2>Scan Log</h2>
+    <div class="log" id="log"></div>
+  </div>
 
   <script src="main.js"></script>
+
+  <script>
+    let cooldownActive = false;
+    let cooldownTime = 5; // seconds
+    let cooldownTimer;
+
+    function startCooldown() {
+      if (cooldownActive) return; // prevent stacking timers
+      cooldownActive = true;
+      let timeLeft = cooldownTime;
+      document.getElementById("Cooldown").textContent = `⏳ Cooldown: ${timeLeft}s`;
+
+      cooldownTimer = setInterval(() => {
+        timeLeft--;
+        if (timeLeft > 0) {
+          document.getElementById("Cooldown").textContent = `⏳ Cooldown: ${timeLeft}s`;
+        } else {
+          clearInterval(cooldownTimer);
+          cooldownActive = false;
+          document.getElementById("Cooldown").textContent = "✅ Ready to scan";
+        }
+      }, 1000);
+    }
+
+    window.startCooldown = startCooldown;
+  </script>
 </body>
 </html>
