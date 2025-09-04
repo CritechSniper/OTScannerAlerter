@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <link rel="stylesheet" href="login.css">
+</head>
+<body>
+  <div class="idk1"></div>
+  <div class="idk2"></div>
+  <div class="d1">
+    <img src="OIP.jpg" title="Logo" id="Logo" style="width: 100%;">
+    <label for="int">Enter a pin or else...</label>
+    <input type="text" id="int" autocomplete="off" required>
+    <button id="whyAreYouInspectingHuh">Login</button>
+  </div>
+</body>
+  <script src="./js.js"></script>
+  <script type="module">
+    if (localStorage.getItem("LoggedIn")) { window.location.href = "main2.html"}
+    import { getAuth } from "https://www.gstatic.com/firebasejs/11.5.0/firebase-auth.js";
+    import { getDatabase, get, ref, set } from "https://www.gstatic.com/firebasejs/11.5.0/firebase-database.js";
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.5.0/firebase-app.js";
+    const firebaseConfig = {
+      apiKey: "AIzaSyClGVm-i4aOwMIvo6KV_GTDRNQkBwGM7aM",
+      authDomain: "mine-a375c.firebaseapp.com",
+      databaseURL: "https://mine-a375c-default-rtdb.asia-southeast1.firebasedatabase.app",
+      projectId: "mine-a375c",
+      storageBucket: "mine-a375c.firebasestorage.app",
+      messagingSenderId: "117217183864",
+      appId: "1:117217183864:web:7f4aef099993670121458d",
+      measurementId: "G-CPYBHFPGPX"
+    };
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getDatabase(app);
+    const r = ref(db, "Gate1")
+    const cg1 = await get(ref(db, "Gate1")) // When u r seeing this, there is another gate with Gate2 as the key and vlue as something 
+    const cg1c = cg1.exists() ? String(cg1.val()) : "Error not found D:"
+    console.log(cg1c)
+    const check = () => {if (document.getElementById('int').value === cg1c && typeof "string") {
+      alert("Success in gaining access")
+      const date = new Date()
+      localStorage.setItem("LoggedIn", "The user is logged in") //Not necessary but you can check it in other html files i this exists or not so you can redirect it to this page
+      localStorage.setItem("LoggedInTime", date) // if logged was over one day the timer will reset to the next day
+    }}
+    document.getElementById('whyAreYouInspectingHuh').addEventListener('click', e => {check()})
+
+  </script>
+</html>
