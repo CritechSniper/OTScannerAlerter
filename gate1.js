@@ -19,7 +19,7 @@ document.addEventListener('keydown', function(e) {
         if ((e.ctrlKey && e.shiftKey) && 
             (e.key === "I" || e.key === "C" || e.key === "J")) {
             e.preventDefault();
-            window.location.href = "https://www.google.com/search?q=You+have+been+kicked";
+            window.location.href = localStorage.getItem("lastPage")
             return false;
         }
     }
