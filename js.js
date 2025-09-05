@@ -33,3 +33,7 @@ document.addEventListener('keydown', event => {
     logo.style.display = (logo.style.display === "none") ? "block" : "none";
   }
 })
+
+if (!window.location.href.includes("login.html")) {
+  localStorage.setItem("lastPage", window.location.href);
+}

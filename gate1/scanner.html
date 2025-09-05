@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gate 1 Scanner</title>
+
+  <script src="https://www.gstatic.com/firebasejs/10.12.3/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.3/firebase-database-compat.js"></script>
+  <script src="gate1login.js"></script> 
+  <!-- 
+  This login thing is only for getting localstorage item which is ONLY for gate1 which means that as of 4/9/2025 10:00 PM i will only do for this folder
+  gate2 will be another server with backup and stuff, when u r seeing this kindly update the fact of checking if the localstorage key for gate1 and gate2 are embedded in  the rest of the files whcih are "LoggedInGate1" and "LoggedInGate2" respectively.
+  -->
+  <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
+
+  <link rel="stylesheet" href="css.css">
+  <link rel="stylesheet" href="css/scanner.css">
+</head>
+<body>
+  <h1>OT Parent QR Scanner</h1>
+
+  <div class="scanner-container">
+    <div id="reader"></div>
+    <select id="cameraSelect" title="Why are you inspecting this??!"></select>
+  </div>
+
+  <p id="Cooldown">✅ Ready to scan</p>
+
+  <div class="log-container">
+    <h2>Scan Log</h2>
+    <div class="log" id="log"></div>
+  </div>
+
+  <script src="../js.js"></script>
+  <script src="js/display.js"></script>
+
+  <script>
+    let cooldownActive = false;
+    let cooldownTime = 5; // seconds
+    let cooldownTimer;
+
+    function startCooldown() {
+      if (cooldownActive) return; // prevent stacking timers
+      cooldownActive = true;
+      let timeLeft = cooldownTime;
+      document.getElementById("Cooldown").textContent = `⏳ Cooldown: ${timeLeft}s`;
+
+      cooldownTimer = setInterval(() => {
+        timeLeft--;
+        if (timeLeft > 0) {
+          document.getElementById("Cooldown").textContent = `⏳ Cooldown: ${timeLeft}s`;
+        } else {
+          clearInterval(cooldownTimer);
+          cooldownActive = false;
+          document.getElementById("Cooldown").textContent = "✅ Ready to scan";
+        }
+      }, 1000);
+    }
+
+    window.startCooldown = startCooldown;
+  </script>
+</body>
+</html>

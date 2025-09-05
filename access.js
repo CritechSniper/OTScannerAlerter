@@ -9,3 +9,5 @@ if (!granted || !grantedTime || now - grantedTime > twentyFourHours) {
   sessionStorage.removeItem("accessTime");
   window.location.href = "../login.html"; 
 }
+// sessionStorage.setItem("access", "accessgranted24h");
+// sessionStorage.setItem("accessTime", Date.now().toString());
