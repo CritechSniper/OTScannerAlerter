@@ -3,10 +3,10 @@ const gateAccess = params.get("accessReq");
 
 if (gateAccess) {
   console.log("Access needed for:", gate);
-  if (gate == "gate1") {
+  if (gateAccess == "gate1") {
     gate("Gate 1")
   }
-  if (gate == "gate2") {
+  if (gateAccess == "gate2") {
     gate("Gate 2")
   
   }
