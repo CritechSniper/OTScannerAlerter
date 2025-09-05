@@ -1,3 +1,4 @@
+import { triggerEmail as sm } from "../../mailer.js";
 const firebaseConfig = {
   apiKey: "AIzaSyAqjFBhcYZmymEcxFf4G_9Wbk78FD2Fqm4",
   authDomain: "otscanneralerter.firebaseapp.com",
@@ -14,10 +15,12 @@ const db = firebase.database();
 
 const logEl = document.getElementById("log");
 
+// I FINALLY MADE THE MAIL SENDER THROUGH PYTHON AND NODE JS ITS ON RENDER 
+
 let lastScanTime = 0;
 const SCAN_COOLDOWN = 5000;
 
-function onScanSuccess(decodedText) {
+async function onScanSuccess(decodedText) {
 	startCooldown();
   const now = Date.now();
   if (now - lastScanTime < SCAN_COOLDOWN) {
@@ -34,10 +37,10 @@ function onScanSuccess(decodedText) {
   let parts = decodedText.split(" - ");
   let studentName = parts[1];
   let classSection = parts[2];
-
+  sm(parts[0]) // sends the actual mail from the school id like this `${id}@iischoolabudhabi.com`
   const callsRef = db.ref("calls");
   const entry = `${studentName}|${classSection}|${Date.now()}`;
-  callsRef.push(entry);
+  await callsRef.push(entry);
 
   const logRef = db.ref("log");
   const logEntry = `${studentName}|${classSection}`;
