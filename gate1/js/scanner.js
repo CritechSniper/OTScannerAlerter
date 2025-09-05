@@ -37,7 +37,7 @@ async function onScanSuccess(decodedText) {
   let parts = decodedText.split(" - ");
   let studentName = parts[1];
   let classSection = parts[2];
-  sm(parts[0]) // sends the actual mail from the school id like this `${id}@iischoolabudhabi.com`
+  await sm(parts[0]) // sends the actual mail from the school id like this `${id}@iischoolabudhabi.com`
   const callsRef = db.ref("calls");
   const entry = `${studentName}|${classSection}|${Date.now()}`;
   await callsRef.push(entry);
