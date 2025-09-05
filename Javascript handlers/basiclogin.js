@@ -10,11 +10,14 @@ if (gate) {
     gate2();
   }
 }
-let inp = document.getElementById("inp");
+
 let btn = document.getElementById("btn");
+
 function gate1() {
+  const inp = document.getElementById("inp");
   inp.innerHTML = `<label for="pinInput">Gate 1 </label>`;
 }
 function gate2() {
+  const inp = document.getElementById("inp");
   inp.innerHTML = `<label for="pinInput">Gate 2 </label>`;
 }
