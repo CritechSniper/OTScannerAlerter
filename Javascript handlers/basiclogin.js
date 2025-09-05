@@ -32,13 +32,22 @@ function gate(name) {
   // Define the conPinG function
   function conPinG(pin) {
     const inputHash = CryptoJS.SHA256(pin).toString();
-    const targetHash = "99cb706a222bf586be1857fcbe2392cd5f14cd567ff8c01ebe447cb063ffa746";
 
-    if (inputHash === targetHash) {
-      localStorage.setItem("accessGt", true);
+    const gateHashes = {
+      gate1: "99cb706a222bf586be1857fcbe2392cd5f14cd567ff8c01ebe447cb063ffa746",
+      gate2: "b0e4fb6728114e6256a6a7e80ffb5df454d8bff173c1699bf270e5b986285aab"
+    };
+
+    const expectedHash = gateHashes[gateAccess];
+
+    if (inputHash === expectedHash) {
+      localStorage.setItem("accessGt", gateAccess); // Store which gate was accessed
+      console.log("✅ Access granted to", gateAccess);
+    } else {
+      console.warn("❌ Incorrect PIN for", gateAccess);
     }
   }
-  //gate14499admin
-  // Optionally expose it globally
+
+  // Expose globally
   window.conPinG = conPinG;
 })();
