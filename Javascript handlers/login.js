@@ -31,11 +31,12 @@ const handleGateLogin = async (gateKey, redirectPath, storageKey) => {
 };
 
 document.getElementById('loginBtn').addEventListener('click', () => {
-  if (window.location.href === 'gate1/login') {
-    handleGateLogin("Gate1", "./main2.html", "LoggedInGate1")
-  } else if( window.location.href === 'gate2/' ) {
-    handleGateLogin("Gate2", "./main2.html", "LoggedInGate2")
+  if (window.location.pathname === '/gate1/login.html') {
+    handleGateLogin("Gate1", "./main2.html", "LoggedInGate1");
+  } else if (window.location.pathname === '/gate2/login.html') {
+    handleGateLogin("Gate2", "./main2.html", "LoggedInGate2");
   } else {
-    console.error("Failed to execute the code")
+    console.error("Failed to execute the code");
   }
+
 });
