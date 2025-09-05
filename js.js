@@ -41,7 +41,7 @@ if (!window.location.href.includes("login.html")) {
 if (!window.location.href.includes("login.html")) {
   localStorage.setItem("lastPage", window.location.href);
 }
-if (localStorage.getItem("accessG", true)) {}
-else {
-  window.location.href = "login.html";
-}
+// if (localStorage.getItem("accessG", true)) {}
+// else {
+//   window.location.href = "login.html";
+// }
