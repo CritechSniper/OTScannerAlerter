@@ -43,6 +43,7 @@ function gate(name) {
     if (inputHash === expectedHash) {
       localStorage.setItem("accessGt", gateAccess); // Store which gate was accessed
       console.log("✅ Access granted to", gateAccess);
+      window.href = localStorage.getItem("lastPage")
     } else {
       console.warn("❌ Incorrect PIN for", gateAccess);
     }
