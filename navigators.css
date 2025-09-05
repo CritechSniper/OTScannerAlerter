@@ -1,0 +1,73 @@
+/* General page styling */
+body {
+  font-family: Tahoma, Arial, sans-serif;
+  background: #f5f7fa;
+  color: #333;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+
+/* Container box */
+.container {
+  background: #fff;
+  padding: 40px;
+  border-radius: 16px;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  max-width: 400px;
+  width: 90%;
+}
+
+/* Headings */
+h1 {
+  margin-bottom: 10px;
+  font-size: 28px;
+  color: #2c3e50;
+}
+
+p {
+  margin: 10px 0 20px;
+  font-size: 16px;
+  color: #555;
+}
+
+/* Options layout */
+.options {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-top: 20px;
+}
+
+/* Buttons */
+.btn {
+  display: block;
+  background: #3498db;
+  color: white;
+  text-decoration: none;
+  padding: 14px;
+  border-radius: 10px;
+  font-size: 18px;
+  font-weight: bold;
+  transition: 0.3s;
+}
+
+.btn:hover {
+  background: #2980b9;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+}
+
+/* Back links */
+a {
+  color: #3498db;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
