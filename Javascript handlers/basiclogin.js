@@ -1,7 +1,7 @@
 const params = new URLSearchParams(window.location.search);
-const gate = params.get("accessReq");
+const gateAccess = params.get("accessReq");
 
-if (gate) {
+if (gateAccess) {
   console.log("Access needed for:", gate);
   if (gate == "gate1") {
     gate("Gate 1")
