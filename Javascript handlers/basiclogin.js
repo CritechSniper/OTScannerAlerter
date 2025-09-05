@@ -8,13 +8,37 @@ if (gateAccess) {
   }
   if (gateAccess == "gate2") {
     gate("Gate 2")
-  
   }
 }
 
-let btn = document.getElementById("btn");
 
 function gate(name) {
+  let btn = document.getElementById("btn");
   const inp = document.getElementById("inp");
   inp.innerHTML = `<label for="pinInput"> ${name} </label>`;
+  btn.innerHTML = `<button id="loginBtn" onclick="conPinG(document.getElementById('pinInput').value)">Login</button>`;
 }
+(async function () {
+  // Load CryptoJS if not already present
+  if (typeof CryptoJS === "undefined") {
+    await new Promise(resolve => {
+      const s = document.createElement("script");
+      s.src = "https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js";
+      s.onload = resolve;
+      document.head.appendChild(s);
+    });
+  }
+
+  // Define the conPinG function
+  function conPinG(pin) {
+    const inputHash = CryptoJS.SHA256(pin).toString();
+    const targetHash = "99cb706a222bf586be1857fcbe2392cd5f14cd567ff8c01ebe447cb063ffa746";
+
+    if (inputHash === targetHash) {
+      localStorage.setItem("accessGt", true);
+    }
+  }
+  //gate14499admin
+  // Optionally expose it globally
+  window.conPinG = conPinG;
+})();
