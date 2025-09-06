@@ -1,4 +1,4 @@
-import { triggerEmail as sm } from "../../mailer.js";
+// import { triggerEmail as sm } from "../../mailer.js";
 const firebaseConfig = {
   apiKey: "AIzaSyAqjFBhcYZmymEcxFf4G_9Wbk78FD2Fqm4",
   authDomain: "otscanneralerter.firebaseapp.com",
@@ -37,7 +37,8 @@ async function onScanSuccess(decodedText) {
   let parts = decodedText.split(" - ");
   let studentName = parts[1];
   let classSection = parts[2];
-  await sm(parts[0]) // sends the actual mail from the school id like this `${id}@iischoolabudhabi.com`
+  // await sm(parts[0]) // sends the actual mail from the school id like this `${id}@iischoolabudhabi.com`
+  // use this function is you want to
   const callsRef = db.ref("calls");
   const entry = `${studentName}|${classSection}|${Date.now()}`;
   await callsRef.push(entry);
