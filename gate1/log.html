@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Log Viewer</title>
+  <script src="log.js" type="module"></script>
+  <style>
+    /* -------------------------
+    log page styling
+    ------------------------- */
+    body {
+    font-family: Tahoma, Arial, sans-serif;
+    background: #f5f7fa;
+    padding: 20px;
+    color: #222;
+    }
+
+    h1 {
+    text-align: center;
+    margin-bottom: 18px;
+    font-size: 1.4rem;
+    color: #111;
+    }
+
+    /* list container */
+    #logList {
+    list-style: none;
+    padding: 0;
+    margin: 0 auto;
+    max-width: 820px;
+    }
+
+    /* each entry */
+    #logList li {
+    background: #fff;
+    margin: 8px 0;
+    padding: 12px 14px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(12,12,12,0.06);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    word-break: break-word;
+    }
+
+    /* left side (name - grade) */
+    .entry-text {
+    font-size: 1rem;
+    line-height: 1.2;
+    color: #1c1c1c;
+    flex: 1 1 auto;
+    min-width: 0; /* allow ellipsis on overflow */
+    }
+
+    /* right side (time) — gray and subtle */
+    .entry-time {
+    color: #8b8b8b; /* gray */
+    font-size: 0.88rem;
+    white-space: nowrap;
+    margin-left: 12px;
+    flex: 0 0 auto;
+    }
+
+    /* small screens: stack name above time */
+    @media (max-width: 520px) {
+    #logList li {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    .entry-time {
+        margin-left: 0;
+        margin-top: 6px;
+    }
+    }
+
+  </style>
+</head>
+<body>
+  <h1>📋 Log of Called Students</h1>
+  <ul id="logList"></ul>
+</body>
+</html>
