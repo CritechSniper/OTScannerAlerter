@@ -1,4 +1,4 @@
-// import { triggerEmail as sm } from "../../mailer.js";
+import { triggerEmail as sm } from "../../mailer.js";
 const firebaseConfig = {
   apiKey: "AIzaSyAqjFBhcYZmymEcxFf4G_9Wbk78FD2Fqm4",
   authDomain: "otscanneralerter.firebaseapp.com",
@@ -14,8 +14,6 @@ firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
 
 const logEl = document.getElementById("log");
-
-// I FINALLY MADE THE MAIL SENDER THROUGH PYTHON AND NODE JS ITS ON RENDER 
 
 let lastScanTime = 0;
 const SCAN_COOLDOWN = 5000;
@@ -37,8 +35,12 @@ async function onScanSuccess(decodedText) {
   let parts = decodedText.split(" - ");
   let studentName = parts[1];
   let classSection = parts[2];
-  // await sm(parts[0]) // sends the actual mail from the school id like this `${id}@iischoolabudhabi.com`
-  // use this function is you want to
+  await sm(
+    `${parts[0]}@iischoolabudhabi.com`, 
+    `Your child, ${studentName}, of ${classSection} has been called. this is just an alert. If this wasn't you, Kindly contact the school\nBy: ot_scanner_services`, 
+    `⚠️${studentName} has been called ⚠️`, 
+    false
+  )
   const callsRef = db.ref("calls");
   const entry = `${studentName}|${classSection}|${Date.now()}`;
   await callsRef.push(entry);

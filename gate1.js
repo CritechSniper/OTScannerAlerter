@@ -6,7 +6,8 @@ document.addEventListener('keydown', function(e) {
         typed += e.key;
         if (typed.toLowerCase().includes("admin")) {
             admin = true;
-            alert("Admin mode enabled");
+            setTimeout(()=>{
+              console.log("%c-Admin mode enabled-", "color: white, background-color: green, border: 0px solid black, border-radius: 5px, padding: 3px")}, 500)
         }
     }
     
@@ -28,15 +29,12 @@ document.addEventListener('contextmenu', e => e.preventDefault());
 document.addEventListener('selectstart', e => e.preventDefault());
 
 document.addEventListener('keydown', event => {
-  if ( event.key.toLowerCase() === "h") {
+  if ( event.key.toLowerCase() === "h" ) {
     const logo = document.getElementById('Logo')
     logo.style.display = (logo.style.display === "none") ? "block" : "none";
   }
 })
 
-if (!window.location.href.includes("login.html")) {
-  localStorage.setItem("lastPage", window.location.href);
-}
 // Save last visited page (skip if it's login page)
 if (!window.location.href.includes("login.html")) {
   localStorage.setItem("lastPage", window.location.href);
@@ -45,8 +43,9 @@ if (!window.location.href.includes("login.html")) {
 // else {
 //   window.location.href = "login.html";
 // }
-if (localStorage.getItem("accessGt", true)) {}
-else {
-  const gate = "gate1";
-  window.location.href = `login.html?accessReq=${gate}`;
+if (localStorage.getItem("accessGt")) {
+  console.log('Accessed')
+} else {
+  // const gate = "gate1"; You wrote this simply even tho declaring the variabl does nothing
+  window.location.href = 'login.html?accessReq=gate1'; // directly put it here
 }
