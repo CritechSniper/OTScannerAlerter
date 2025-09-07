@@ -1,4 +1,4 @@
-import { triggerEmail as sm } from "../../mailer.js";
+import { triggerEmail as sm } from "../../mailer.js"; // Importing the functtion from the firebase
 const firebaseConfig = {
   apiKey: "AIzaSyAqjFBhcYZmymEcxFf4G_9Wbk78FD2Fqm4",
   authDomain: "otscanneralerter.firebaseapp.com",
@@ -17,7 +17,13 @@ const logEl = document.getElementById("log");
 
 let lastScanTime = 0;
 const SCAN_COOLDOWN = 5000;
-
+const formatTime = ()=>{
+  const date = new Date();
+  const parts = date.toString().split(" ")
+  const formattedDate = `Timestamp => Day: ${parts[0]} | Date: ${parts[1]} / ${parts[2]} / ${parts[3]} | Time: ${date.toLocaleTimeString()}`
+  return formattedDate
+}
+console.log(formatTime())
 async function onScanSuccess(decodedText) {
 	startCooldown();
   const now = Date.now();
@@ -37,7 +43,7 @@ async function onScanSuccess(decodedText) {
   let classSection = parts[2];
   await sm(
     `${parts[0]}@iischoolabudhabi.com`, 
-    `Your child, ${studentName}, of ${classSection} has been called. this is just an alert. If this wasn't you, Kindly contact the school\nBy: ot_scanner_services`, 
+    `Your child, ${studentName}, of ${classSection} has been called. this is just an alert. If this wasn't you, Kindly contact the school\n${formatTime()}\nBy: ot_scanner_services`, 
     `⚠️${studentName} has been called ⚠️`, 
     false
   )
