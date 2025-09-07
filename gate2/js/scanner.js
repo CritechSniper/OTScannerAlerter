@@ -1,12 +1,12 @@
 const firebaseConfig = {
-  apiKey: "AIzaSyAqjFBhcYZmymEcxFf4G_9Wbk78FD2Fqm4",
-  authDomain: "otscanneralerter.firebaseapp.com",
-  databaseURL: "https://otscanneralerter-default-rtdb.asia-southeast1.firebasedatabase.app",
-  projectId: "otscanneralerter",
-  storageBucket: "otscanneralerter.firebasestorage.app",
-  messagingSenderId: "686097644253",
-  appId: "1:686097644253:web:6f722bf4e7675ba454b934",
-  measurementId: "G-T13J4GN8V2"
+  apiKey: "AIzaSyD1wwoZmmhWtauyOGCBhOgL_on5ulZsg-4",
+  authDomain: "bruv-8068d.firebaseapp.com",
+  databaseURL: "https://bruv-8068d-default-rtdb.europe-west1.firebasedatabase.app",
+  projectId: "bruv-8068d",
+  storageBucket: "bruv-8068d.firebasestorage.app",
+  messagingSenderId: "696985591809",
+  appId: "1:696985591809:web:e1cc535570213f20ff6000",
+  measurementId: "G-7J650R6255"
 };
 
 firebase.initializeApp(firebaseConfig);
