@@ -16,8 +16,13 @@ const logEl = document.getElementById("log");
 
 let lastScanTime = 0;
 const SCAN_COOLDOWN = 5000;
-
-function onScanSuccess(decodedText) {
+const formatTime = ()=>{
+  const date = new Date();
+  const parts = date.toString().split(" ")
+  const formattedDate = `Timestamp => Day: ${parts[0]} | Date: ${parts[1]} / ${parts[2]} / ${parts[3]} | Time: ${date.toLocaleTimeString()}`
+  return formattedDate
+}
+async function onScanSuccess(decodedText) {
 	startCooldown();
   const now = Date.now();
   if (now - lastScanTime < SCAN_COOLDOWN) {
@@ -30,7 +35,12 @@ function onScanSuccess(decodedText) {
   setTimeout(() => {
     logEl.textContent = "";
   }, 3000);
-
+  await sm(
+      `${parts[0]}@iischoolabudhabi.com`, 
+      `Your child, ${studentName}, of ${classSection} has been called. this is just an alert. If this wasn't you, Kindly contact the school\n${formatTime()}\nBy: ot_scanner_services`, 
+      `⚠️${studentName} has been called ⚠️`, 
+      false
+    )
   let parts = decodedText.split(" - ");
   let studentName = parts[1];
   let classSection = parts[2];
