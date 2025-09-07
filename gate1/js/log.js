@@ -88,10 +88,9 @@ onValue(logRef, (snapshot) => {
     listEl.appendChild(empty);
     return;
   }
-
   snapshot.forEach(childSnap => {
-    const raw = childSnap.val();           // e.g. "Waleed Ammar|Grade 9 A"
-    const key = childSnap.key || "";      // push id
+    const raw = childSnap.val();           // e.g. "Waleed Ammar|Grade 9 A" \\
+    const key = childSnap.key || "";      // push id                         \\
 
     const li = document.createElement("li");
 
