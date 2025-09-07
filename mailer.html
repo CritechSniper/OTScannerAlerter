@@ -2,7 +2,7 @@
   import { triggerEmail as sm } from './mailer.js'
   document.getElementById('Sender').addEventListener('click', (e)=>{
     const { id, body, title, output } = { id: document.getElementById('MId').value, body: "sometext", title:'test mail', output: document.getElementById('output')}
-    document.getElementById('MId').value !== '' ? sm() : console.error('Failure in executing function')
+    document.getElementById('MId').value !== '' ? sm(id, body, title, output) : console.error('Failure in executing function')
   })
   
 </script>
