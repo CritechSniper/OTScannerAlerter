@@ -6,7 +6,10 @@ document.addEventListener('keydown', function(e) {
         typed += e.key;
         if (typed.toLowerCase().includes("admin")) {
             admin = true;
-            alert("Admin mode enabled");
+            setTimeout(()=>{
+              console.log("%c-Admin mode enabled-", "color: white, background-color: green, border: 0px solid black, border-radius: 5px, padding: 3px")
+              console.log(typed)
+            }, 500)
         }
     }
     
@@ -41,12 +44,7 @@ if (!window.location.href.includes("login.html")) {
 if (!window.location.href.includes("login.html")) {
   localStorage.setItem("lastPage", window.location.href);
 }
-// if (localStorage.getItem("accessG", true)) {}
-// else {
-//   window.location.href = "login.html";
-// }
 if (localStorage.getItem("accessGt", true)) {}
 else {
-  const gate = "gate2";
-  window.location.href = `login.html?accessReq=${gate}`;
+  window.location.href = 'login.html?accessReq=gate2';
 }

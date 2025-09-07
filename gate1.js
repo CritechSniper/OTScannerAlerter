@@ -24,7 +24,7 @@ document.addEventListener('keydown', function(e) {
             (e.key === "I" || e.key === "C" || e.key === "J")
           ) {
             e.preventDefault();
-            window.location.href = localStorage.getItem("lastPage")
+            window.location.href = 'https://www.google.com/search?q=You+have+been+blocked' // :D
             return false;
         }
     }
