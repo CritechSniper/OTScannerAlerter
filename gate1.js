@@ -24,7 +24,7 @@ document.addEventListener('keydown', function(e) {
             (e.key === "I" || e.key === "C" || e.key === "J")
           ) {
             e.preventDefault();
-            window.location.href = 'https://www.google.com/search?q=You+have+been+blocked' // :D
+            // window.location.href = 'https://www.google.com/search?q=You+have+been+blocked' // :D
             return false;
         }
     }
@@ -46,5 +46,5 @@ if (!window.location.href.includes("login.html")) {
 if (localStorage.getItem("accessGt")) {
   console.log('Accessed')
 } else {
-  windowlocation.href = 'login.html?accessReq=gate1'; 
+  window.location.href = 'login.html?accessReq=gate1'; 
 }
