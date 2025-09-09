@@ -46,5 +46,5 @@ if (!window.location.href.includes("login.html")) {
 }
 if (localStorage.getItem("accessGt", true)) {}
 else {
-  window.location.href = 'login.html?accessReq=gate2';
+  window.location.href = '../login.html?accessReq=gate2';
 }
