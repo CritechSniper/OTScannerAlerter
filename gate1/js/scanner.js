@@ -48,7 +48,7 @@ async function onScanSuccess(decodedText) {
     false
   )
   const callsRef = db.ref("calls");
-  const entry = `${studentName}|${classSection}|${Date.now()}`;
+  const entry = `${studentName} | ${classSection} | ${Date.now()}`;
   await callsRef.push(entry);
 
   const logRef = db.ref("log");
