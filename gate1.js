@@ -46,5 +46,5 @@ if (!window.location.href.includes("login.html")) {
 if (localStorage.getItem("accessGt")) {
   console.log('Accessed')
 } else {
-  window.location.href = 'login.html?accessReq=gate1'; 
+  window.location.href = '../login.html?accessReq=gate1'; 
 }
