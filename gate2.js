@@ -18,11 +18,11 @@ document.addEventListener('keydown', function(e) {
             e.preventDefault();
             return false;
         }
-        // Ctrl+Shift+I, Ctrl+Shift+C, Ctrl+Shift+J
         if ((e.ctrlKey && e.shiftKey) && 
-            (e.key === "I" || e.key === "C" || e.key === "J")) {
+            (e.key === "I" || e.key === "C" || e.key === "J"))
+            {
             e.preventDefault();
-            // window.location.href = "https://www.google.com/search?q=You+have+been+kicked";
+            localStorage.getItem("lastPage");
             return false;
         }
     }
@@ -37,9 +37,6 @@ document.addEventListener('keydown', event => {
   }
 })
 
-if (!window.location.href.includes("login.html")) {
-  localStorage.setItem("lastPage", window.location.href);
-}
 // Save last visited page (skip if it's login page)
 if (!window.location.href.includes("login.html")) {
   localStorage.setItem("lastPage", window.location.href);

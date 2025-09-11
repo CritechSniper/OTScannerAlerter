@@ -18,13 +18,11 @@ document.addEventListener('keydown', function(e) {
             e.preventDefault();
             return false;
         }
-        // Ctrl+Shift+I, Ctrl+Shift+C, Ctrl+Shift+J Uses BODMAS rules just like in math
-        if (
-            (e.ctrlKey && e.shiftKey) && 
-            (e.key === "I" || e.key === "C" || e.key === "J")
-          ) {
+        if ((e.ctrlKey && e.shiftKey) && 
+            (e.key === "I" || e.key === "C" || e.key === "J"))
+            {
             e.preventDefault();
-            // window.location.href = 'https://www.google.com/search?q=You+have+been+blocked' // :D
+            localStorage.getItem("lastPage");
             return false;
         }
     }
@@ -33,7 +31,7 @@ document.addEventListener('contextmenu', e => e.preventDefault());
 document.addEventListener('selectstart', e => e.preventDefault());
 
 document.addEventListener('keydown', event => {
-  if ( event.key.toLowerCase() === "h" ) {
+  if ( event.key.toLowerCase() === "h") {
     const logo = document.getElementById('Logo')
     logo.style.display = (logo.style.display === "none") ? "block" : "none";
   }
@@ -43,8 +41,7 @@ document.addEventListener('keydown', event => {
 if (!window.location.href.includes("login.html")) {
   localStorage.setItem("lastPage", window.location.href);
 }
-if (localStorage.getItem("accessGt")) {
-  console.log('Accessed')
-} else {
+if (localStorage.getItem("accessGt", true)) {}
+else {
   window.location.href = '../login.html?accessReq=gate1'; 
 }
