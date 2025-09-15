@@ -43,7 +43,7 @@ async function onScanSuccess(decodedText) {
   let classSection = parts[2];
   await sm(
     `${parts[0]}@iischoolabudhabi.com`, 
-    `Your child, ${studentName}, of ${classSection} has been called. this is just an alert. If this wasn't you, Kindly contact the school\n${formatTime()}\nBy: ot_scanner_services`, 
+    `Your child, ${studentName}, of ${classSection} has been called in Gate-1. this is just an alert. If this wasn't you, Kindly contact the school\n${formatTime()}\nBy: ot_scanner_services`, 
     `⚠️${studentName} has been called ⚠️`, 
     false
   )

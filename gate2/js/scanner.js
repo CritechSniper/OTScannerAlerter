@@ -35,15 +35,15 @@ async function onScanSuccess(decodedText) {
   setTimeout(() => {
     logEl.textContent = "";
   }, 3000);
-  await sm(
-      `${parts[0]}@iischoolabudhabi.com`, 
-      `Your child, ${studentName}, of ${classSection} has been called. this is just an alert. If this wasn't you, Kindly contact the school\n${formatTime()}\nBy: ot_scanner_services`, 
-      `⚠️${studentName} has been called ⚠️`, 
-      false
-    )
   let parts = decodedText.split(" - ");
   let studentName = parts[1];
   let classSection = parts[2];
+  await sm(
+      `${parts[0]}@iischoolabudhabi.com`, 
+      `Your child, ${studentName}, of ${classSection} has been called in Gate-2. this is just an alert. If this wasn't you, Kindly contact the school\n${formatTime()}\nBy: ot_scanner_services`, 
+      `⚠️${studentName} has been called ⚠️`, 
+      false
+    )
 
   const callsRef = db.ref("calls");
   const entry = `${studentName}|${classSection}|${Date.now()}`;
