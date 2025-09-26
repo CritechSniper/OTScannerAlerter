@@ -1,4 +1,4 @@
-import { triggerEmail as sm } from "../../mailer.js"; // Importing the functtion from the firebase
+// import { triggerEmail as sm } from "../../mailer.js"; // Importing the functtion from the firebase
 const firebaseConfig = {
   apiKey: "AIzaSyAqjFBhcYZmymEcxFf4G_9Wbk78FD2Fqm4",
   authDomain: "otscanneralerter.firebaseapp.com",
