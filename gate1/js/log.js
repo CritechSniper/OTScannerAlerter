@@ -4,7 +4,6 @@
 // Put this inside a <script type="module">...</script> on log.html
 // or save as a .js file and import as module.
 // Replace firebaseConfig with your project's config.
-
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
 import {
   getDatabase,
@@ -13,8 +12,6 @@ import {
   orderByKey,
   onValue
 } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-database.js";
-
-/* ===== YOUR FIREBASE CONFIG - replace these ===== */
 const firebaseConfig = {
 	apiKey: "AIzaSyAqjFBhcYZmymEcxFf4G_9Wbk78FD2Fqm4",
 	authDomain: "otscanneralerter.firebaseapp.com",
@@ -29,20 +26,12 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
-// query logs ordered by push-key (which preserves time order)
 const logRef = query(ref(db, "log"), orderByKey());
 
 const listEl = document.getElementById("logList");
 if (!listEl) {
   console.error("No #logList element found. Add <ul id=\"logList\"></ul> to the page.");
 }
-
-/**
- * Decode Firebase push ID's timestamp.
- * Firebase push IDs encode a 64-bit-ish timestamp in the first 8 characters.
- * This function converts those first 8 chars into milliseconds since epoch.
- * Reference alphabet used by Firebase push ids:
- */
 const PUSH_CHARS = "-0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz";
 
 function pushIdToTime(pushId) {
@@ -71,11 +60,6 @@ function formatTimestamp(ms) {
   if (mins < 10) mins = "0" + mins;
   return `${day} ${month} ${year} • ${hours}:${mins}`;
 }
-
-/**
- * Render the snapshot children into the list.
- * We keep oldest → newest order as returned by orderByKey().
- */
 onValue(logRef, (snapshot) => {
   if (!listEl) return;
   listEl.innerHTML = ""; // clear
