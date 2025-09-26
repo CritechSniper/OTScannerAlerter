@@ -40,7 +40,7 @@ function speakAnnouncement(entry) {
   const calledAt = ts ? new Date(parseInt(ts)).toLocaleTimeString() : "";
 
   const msg = new SpeechSynthesisUtterance(
-    `${studentName} from class ${classSection}..... ${studentName} from class ${classSection}`
+    `${studentName} from class ${classSection}..... ${studentName} from class ${classSection}..... ${studentName} from class ${classSection}`
   );
   if (selectedVoice) msg.voice = selectedVoice;
   msg.rate = 0.95;
