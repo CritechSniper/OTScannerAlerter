@@ -1,9 +1,4 @@
-// -------------------------
-// log viewer JS (module)
-// -------------------------
-// Put this inside a <script type="module">...</script> on log.html
-// or save as a .js file and import as module.
-// Replace firebaseConfig with your project's config.
+//Import statements + fb confings
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
 import {
   getDatabase,

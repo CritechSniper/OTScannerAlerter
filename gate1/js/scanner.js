@@ -1,3 +1,4 @@
+import { Mailer } from "../../mailer";
 // import { triggerEmail as sm } from "../../mailer.js"; // Importing the functtion from the firebase
 const firebaseConfig = {
   apiKey: "AIzaSyAqjFBhcYZmymEcxFf4G_9Wbk78FD2Fqm4",
@@ -23,7 +24,7 @@ const formatTime = ()=>{
   const formattedDate = `Timestamp => Day: ${parts[0]} | Date: ${parts[1]} / ${parts[2]} / ${parts[3]} | Time: ${date.toLocaleTimeString()}`
   return formattedDate
 }
-console.log(formatTime())
+const mailer = new Mailer()
 async function onScanSuccess(decodedText) {
 	startCooldown();
   const now = Date.now();
@@ -41,11 +42,10 @@ async function onScanSuccess(decodedText) {
   let parts = decodedText.split(" - ");
   let studentName = parts[1];
   let classSection = parts[2];
-  await sm(
+  await mailer.mail(
     `${parts[0]}@iischoolabudhabi.com`, 
     `Your child, ${studentName}, of ${classSection} has been called in Gate-1. this is just an alert. If this wasn't you, Kindly contact the school\n${formatTime()}\nBy: ot_scanner_services`, 
-    `⚠️${studentName} has been called ⚠️`, 
-    false
+    `⚠️${studentName} has been called ⚠️`
   )
   const callsRef = db.ref("calls");
   const entry = `${studentName} | ${classSection} | ${Date.now()}`;
