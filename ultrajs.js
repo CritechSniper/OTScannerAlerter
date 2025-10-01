@@ -21,12 +21,12 @@ function handleConfirmlinkedFlag(event) {
     clearTimeout(fallbackTimeout);
 }
 document.addEventListener('confirmlinkedFlag', handleConfirmlinkedFlag);
-const fallbackTimeout = setTimeout(() => {
-    console.warn("confirmlinked.js didn't load or event not fired, taking fallback action");
-    const styke = document.createElement('div');
-    styke.addEventListener('custom', () => {
-        const fn = 're' + 'load';
-        window.location[fn]();
-    });
-    styke.dispatchEvent(new Event('custom'));
-}, 3000);
+// const fallbackTimeout = setTimeout(() => {
+//     console.warn("confirmlinked.js didn't load or event not fired, taking fallback action");
+//     const styke = document.createElement('div');
+//     styke.addEventListener('custom', () => {
+//         const fn = 're' + 'load';
+//         window.location[fn]();
+//     });
+//     styke.dispatchEvent(new Event('custom'));
+// }, 3000);

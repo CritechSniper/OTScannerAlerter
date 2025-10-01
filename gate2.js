@@ -8,7 +8,6 @@ document.addEventListener('keydown', function(e) {
             admin = true;
             setTimeout(()=>{
               console.log("%c-Admin mode enabled-", "color: white, background-color: green, border: 0px solid black, border-radius: 5px, padding: 3px")
-              console.log(typed)
             }, 500)
         }
     }

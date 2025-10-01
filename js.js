@@ -6,7 +6,7 @@ document.addEventListener('keydown', function(e) {
         typed += e.key;
         if (typed.toLowerCase().includes("admin")) {
             admin = true;
-            alert("Admin mode enabled");
+            console.log("Admin mode enabled");
         }
     }
     
