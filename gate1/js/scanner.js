@@ -1,4 +1,4 @@
-import { Mailer } from "../../mailer";
+import { Mailer } from "../../mailer.js";
 // import { triggerEmail as sm } from "../../mailer.js"; // Importing the functtion from the firebase
 const firebaseConfig = {
   apiKey: "AIzaSyAqjFBhcYZmymEcxFf4G_9Wbk78FD2Fqm4",
