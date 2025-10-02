@@ -1,4 +1,3 @@
-//Import statements + fb confings
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
 import {
   getDatabase,
@@ -14,7 +13,8 @@ const firebaseConfig = {
 	projectId: "otscanneralerter",
 	storageBucket: "otscanneralerter.firebasestorage.app",
 	messagingSenderId: "686097644253",
-	appId: "1:686097644253:web:6f722bf4e7675ba454b934"
+	appId: "1:686097644253:web:6f722bf4e7675ba454b934",
+  measurementId: "G-T13J4GN8V2"
 };
 /* ================================================ */
 
@@ -76,31 +76,31 @@ onValue(logRef, (snapshot) => {
     const textDiv = document.createElement("div");
     textDiv.className = "entry-text";
 
-    // Parse stored value. We expect "Name|Grade ..." but handle fallbacks.
-    let name = raw;
-    let grade = "";
-    if (typeof raw === "string" && raw.includes("|")) {
-      const parts = raw.split("|");
-      name = parts[0].trim();
-      grade = (parts[1] || "").trim();
-    } else if (typeof raw !== "string") {
-      // if someone stored an object, try to read common fields
+      let name = raw;
+      let grade = "";
+      if (typeof raw === "string" && raw.includes("|")) {
+        const parts = raw.split("|");
+        if (parts.length >= 3) {
+          name = parts[1].trim();   // studentName
+          grade = parts[2].trim();  // classSection
+        } else {
+          name = parts[0].trim();
+          grade = (parts[1] || "").trim();
+        }
+      }
       if (raw && typeof raw === "object") {
         name = raw.name || raw.fullName || raw.student || JSON.stringify(raw);
         grade = raw.grade || raw.class || "";
-      } else {
-        name = String(raw);
-      }
+    } else {
+      name = String(raw);
     }
 
-    // final text: "Name - Grade" (no brackets). If no grade, show only name.
     const displayText = grade ? `${name} - ${grade}` : name;
     textDiv.textContent = displayText;
 
     const timeSpan = document.createElement("span");
     timeSpan.className = "entry-time";
 
-    // Try to decode time from push key
     const ms = pushIdToTime(key);
     if (ms) {
       timeSpan.textContent = formatTimestamp(ms);

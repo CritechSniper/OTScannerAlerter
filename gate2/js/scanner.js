@@ -44,16 +44,14 @@ async function onScanSuccess(decodedText) {
   try {
     const mailer = new Mailer() //Do not remove this line...
     await mailer.mail(
-        `${id}@iischoolabudhabi.com`, 
-        `${id} - ${studentName}, of ${classSection} has been called in Gate-2. This is just an alert. If this wasn't you, Kindly contact the school\n${formatTime()}\n\nBy: ot_scanner_services`, 
-        `⚠️${studentName} has been called ⚠️`, 
-        false
-      )
+      `${id}@iischoolabudhabi.com`, 
+      `${id} - ${studentName}, of ${classSection} has been called in Gate-2. This is just an alert. If this wasn't you, Kindly contact the school\n${formatTime()}\n\nBy: ot_scanner_services`, 
+      `⚠️${studentName} has been called ⚠️`, 
+    )
   } catch (err) { 
     console.log("Failed to send email, error listed below: ")
     console.log(err)
   }
-
   const callsRef = db.ref("calls");
   const entry = `${id}|${studentName}|${classSection}`;
   callsRef.push(entry);
@@ -62,7 +60,7 @@ async function onScanSuccess(decodedText) {
   const logEntry = `${id}|${studentName}|${classSection}`;
   logRef.push(logEntry);
 
-  console.log("📌 Saved:", entry, " & logged:", logEntry);
+  console.log(entry);
 }
 
 const html5QrCode = new Html5Qrcode("reader");

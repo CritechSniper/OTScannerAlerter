@@ -23,7 +23,6 @@ const formatTime = ()=>{
   const formattedDate = `Timestamp => Day: ${parts[0]} | Date: ${parts[1]} / ${parts[2]} / ${parts[3]} | Time: ${date.toLocaleTimeString()}`
   return formattedDate
 }
-
 async function onScanSuccess(decodedText) {
 	startCooldown();
   const now = Date.now();
@@ -61,7 +60,7 @@ async function onScanSuccess(decodedText) {
   const logEntry = `${id}|${studentName}|${classSection}`;
   logRef.push(logEntry);
 
-  console.log("📌 Saved:", entry, " & logged:", logEntry);
+  console.log(entry);
 }
 
 const html5QrCode = new Html5Qrcode("reader");

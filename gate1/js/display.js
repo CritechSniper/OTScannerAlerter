@@ -35,9 +35,33 @@ if (speechSynthesis.onvoiceschanged !== undefined) {
 }
 pickVoice();
 
-function speakAnnouncement(entry) {
-  const [studentName, classSection, ts] = entry.split("|");
-  const calledAt = ts ? new Date(parseInt(ts)).toLocaleTimeString() : "";
+const PUSH_CHARS = "-0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz";
+
+function pushIdToTime(pushId) {
+  if (!pushId || pushId.length < 8) return null;
+  let timestamp = 0;
+  for (let i = 0; i < 8; i++) {
+    const c = pushId.charAt(i);
+    const idx = PUSH_CHARS.indexOf(c);
+    if (idx === -1) return null;
+    timestamp = timestamp * 64 + idx;
+  }
+  return timestamp; // ms
+}
+
+function formatTimestamp(ms) {
+  if (!ms) return "";
+  const d = new Date(ms);
+  let hours = d.getHours();
+  const minutes = String(d.getMinutes()).padStart(2, "0");
+  const ampm = hours >= 12 ? "PM" : "AM";
+  hours = hours % 12 || 12;
+  return `${hours}:${minutes} ${ampm}`;
+}
+
+
+function speakAnnouncement(entry, key) {
+  const [id, studentName, classSection] = entry.split("|");
 
   const msg = new SpeechSynthesisUtterance(
     `${studentName} from class ${classSection}..... ${studentName} from class ${classSection}..... ${studentName} from class ${classSection}`
@@ -45,13 +69,15 @@ function speakAnnouncement(entry) {
   if (selectedVoice) msg.voice = selectedVoice;
   msg.rate = 0.95;
   speechSynthesis.speak(msg);
-  // speechSynthesis.speak(msg);
+
+  const ms = pushIdToTime(key);
+  const calledAt = ms ? formatTimestamp(ms) : "";
 
   const container = document.getElementById("calls");
   if (container) {
     container.insertAdjacentHTML('afterbegin', `
       <div style="font-family:Tahoma; text-align:center; margin-bottom: 10px; border-bottom: 1px solid #ccc; padding: 5px;">
-        <h2 class="font-ibmplex">${studentName} - Class ${classSection}</h2>
+        <h2 class="font-ibmplex">${id} - ${studentName} - Class ${classSection}</h2>
         <p class="font-sharetech">Called at: ${calledAt}</p>
       </div>
     `);
@@ -59,10 +85,10 @@ function speakAnnouncement(entry) {
 }
 
 onChildAdded(callsRef, (snapshot) => {
-	const entry = snapshot.val();
-	if (typeof entry === "string" && entry.includes("|")) {
-	speakAnnouncement(entry);
-	}
+  const entry = snapshot.val();
+  if (typeof entry === "string" && entry.includes("|")) {
+    speakAnnouncement(entry, snapshot.key);
+  }
   cleanupOldCalls();
 });
 
@@ -123,5 +149,6 @@ window.clearFb = async function(path) {
 // clearFb("lastReset")
 // clearFb("")   // DANGER: wipes entire database
 
+console.log("clearFb()");
 checkAndResetCalls();
 setInterval(updateClock, 1000);
