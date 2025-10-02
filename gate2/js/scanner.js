@@ -1,3 +1,4 @@
+import { Mailer } from "../../mailer.js";
 const firebaseConfig = {
   apiKey: "AIzaSyD1wwoZmmhWtauyOGCBhOgL_on5ulZsg-4",
   authDomain: "bruv-8068d.firebaseapp.com",
@@ -40,12 +41,18 @@ async function onScanSuccess(decodedText) {
   let id = parts[0];
   let studentName = parts[1];
   let classSection = parts[2];
-  await sm(
-      `${parts[0]}@iischoolabudhabi.com`, 
-      `${id} - ${studentName}, of ${classSection} has been called in Gate-2. this is just an alert. If this wasn't you, Kindly contact the school\n${formatTime()}\nBy: ot_scanner_services`, 
-      `⚠️${studentName} has been called ⚠️`, 
-      false
-    )
+  try {
+    const mailer = new Mailer() //Do not remove this line...
+    await mailer.mail(
+        `${parts[0]}@iischoolabudhabi.com`, 
+        `${id} - ${studentName}, of ${classSection} has been called in Gate-2. this is just an alert. If this wasn't you, Kindly contact the school\n${formatTime()}\nBy: ot_scanner_services`, 
+        `⚠️${studentName} has been called ⚠️`, 
+        false
+      )
+  } catch (err) { 
+    console.log("Failed to send email, error listed below: ")
+    console.log(err)
+  }
 
   const callsRef = db.ref("calls");
   const entry = `${studentName}|${classSection}|${Date.now()}`;
