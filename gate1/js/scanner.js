@@ -23,7 +23,7 @@ const formatTime = ()=>{
   const formattedDate = `Timestamp => Day: ${parts[0]} | Date: ${parts[1]} / ${parts[2]} / ${parts[3]} | Time: ${date.toLocaleTimeString()}`
   return formattedDate
 }
-const mailer = new Mailer()
+
 async function onScanSuccess(decodedText) {
 	startCooldown();
   const now = Date.now();
@@ -42,17 +42,23 @@ async function onScanSuccess(decodedText) {
   let id = parts[0];
   let studentName = parts[1];
   let classSection = parts[2];
-  await mailer.mail(
-    `${id}@iischoolabudhabi.com`, 
-    `${id} - ${studentName}, of ${classSection} has been called in Gate-1. This is just an alert. If this wasn't you, Kindly contact the school\n${formatTime()}\n\nBy: ot_scanner_services`, 
-    `⚠️${studentName} has been called ⚠️`
-  )
+  try {
+    const mailer = new Mailer()
+    await mailer.mail(
+      `${id}@iischoolabudhabi.com`, 
+      `${id} - ${studentName}, of ${classSection} has been called in Gate-1. This is just an alert. If this wasn't you, Kindly contact the school\n${formatTime()}\n\nBy: ot_scanner_services`, 
+      `⚠️${studentName} has been called ⚠️`,
+    )
+  } catch (err) { 
+    console.log("Failed to send email, error listed below: ")
+    console.log(err)
+  }
   const callsRef = db.ref("calls");
-  const entry = `${studentName} | ${classSection} | ${Date.now()}`;
+  const entry = `${id}|${studentName}|${classSection}`;
   await callsRef.push(entry);
 
   const logRef = db.ref("log");
-  const logEntry = `${studentName}|${classSection}`;
+  const logEntry = `${id}|${studentName}|${classSection}`;
   logRef.push(logEntry);
 
   console.log("📌 Saved:", entry, " & logged:", logEntry);

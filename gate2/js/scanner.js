@@ -44,8 +44,8 @@ async function onScanSuccess(decodedText) {
   try {
     const mailer = new Mailer() //Do not remove this line...
     await mailer.mail(
-        `${parts[0]}@iischoolabudhabi.com`, 
-        `${id} - ${studentName}, of ${classSection} has been called in Gate-2. this is just an alert. If this wasn't you, Kindly contact the school\n${formatTime()}\nBy: ot_scanner_services`, 
+        `${id}@iischoolabudhabi.com`, 
+        `${id} - ${studentName}, of ${classSection} has been called in Gate-2. This is just an alert. If this wasn't you, Kindly contact the school\n${formatTime()}\n\nBy: ot_scanner_services`, 
         `⚠️${studentName} has been called ⚠️`, 
         false
       )
@@ -55,11 +55,11 @@ async function onScanSuccess(decodedText) {
   }
 
   const callsRef = db.ref("calls");
-  const entry = `${studentName}|${classSection}|${Date.now()}`;
+  const entry = `${id}|${studentName}|${classSection}`;
   callsRef.push(entry);
 
   const logRef = db.ref("log");
-  const logEntry = `${studentName}|${classSection}`;
+  const logEntry = `${id}|${studentName}|${classSection}`;
   logRef.push(logEntry);
 
   console.log("📌 Saved:", entry, " & logged:", logEntry);
