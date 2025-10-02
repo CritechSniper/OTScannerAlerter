@@ -76,21 +76,16 @@ onValue(logRef, (snapshot) => {
     const textDiv = document.createElement("div");
     textDiv.className = "entry-text";
 
-      let name = raw;
-      let grade = "";
-      if (typeof raw === "string" && raw.includes("|")) {
-        const parts = raw.split("|");
-        if (parts.length >= 3) {
-          name = parts[1].trim();   // studentName
-          grade = parts[2].trim();  // classSection
-        } else {
-          name = parts[0].trim();
-          grade = (parts[1] || "").trim();
-        }
-      }
-      if (raw && typeof raw === "object") {
-        name = raw.name || raw.fullName || raw.student || JSON.stringify(raw);
-        grade = raw.grade || raw.class || "";
+    let name = raw;
+    let grade = "";
+    if (typeof raw === "string" && raw.includes("|")) {
+      const parts = raw.split("|");
+      // id = parts[0].trim();      // studentId
+      name = parts[1].trim();   // studentName
+      grade = parts[2].trim();  // classSection
+    } else if (raw && typeof raw === "object") {
+      name = raw.name || raw.fullName || raw.student || JSON.stringify(raw);
+      grade = raw.grade || raw.class || "";
     } else {
       name = String(raw);
     }
