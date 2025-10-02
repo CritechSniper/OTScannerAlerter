@@ -35,12 +35,14 @@ async function onScanSuccess(decodedText) {
   setTimeout(() => {
     logEl.textContent = "";
   }, 3000);
+  
   let parts = decodedText.split(" - ");
+  let id = parts[0];
   let studentName = parts[1];
   let classSection = parts[2];
   await sm(
       `${parts[0]}@iischoolabudhabi.com`, 
-      `Your child, ${studentName}, of ${classSection} has been called in Gate-2. this is just an alert. If this wasn't you, Kindly contact the school\n${formatTime()}\nBy: ot_scanner_services`, 
+      `${id} - ${studentName}, of ${classSection} has been called in Gate-2. this is just an alert. If this wasn't you, Kindly contact the school\n${formatTime()}\nBy: ot_scanner_services`, 
       `⚠️${studentName} has been called ⚠️`, 
       false
     )

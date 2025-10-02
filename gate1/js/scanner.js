@@ -1,5 +1,4 @@
 import { Mailer } from "../../mailer.js";
-// import { triggerEmail as sm } from "../../mailer.js"; // Importing the functtion from the firebase
 const firebaseConfig = {
   apiKey: "AIzaSyAqjFBhcYZmymEcxFf4G_9Wbk78FD2Fqm4",
   authDomain: "otscanneralerter.firebaseapp.com",
@@ -40,11 +39,12 @@ async function onScanSuccess(decodedText) {
   }, 3000);
 
   let parts = decodedText.split(" - ");
+  let id = parts[0];
   let studentName = parts[1];
   let classSection = parts[2];
   await mailer.mail(
-    `${parts[0]}@iischoolabudhabi.com`, 
-    `Your child, ${studentName}, of ${classSection} has been called in Gate-1. this is just an alert. If this wasn't you, Kindly contact the school\n${formatTime()}\nBy: ot_scanner_services`, 
+    `${id}@iischoolabudhabi.com`, 
+    `${id} - ${studentName}, of ${classSection} has been called in Gate-1. This is just an alert. If this wasn't you, Kindly contact the school\n${formatTime()}\n\nBy: ot_scanner_services`, 
     `⚠️${studentName} has been called ⚠️`
   )
   const callsRef = db.ref("calls");
