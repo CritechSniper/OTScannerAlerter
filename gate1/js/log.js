@@ -108,3 +108,21 @@ onValue(logRef, (snapshot) => {
     listEl.appendChild(li);
   });
 });
+
+// attach search filter
+const searchInput = document.getElementById("searchBar");
+if (searchInput) {
+  searchInput.addEventListener("input", () => {
+    const filter = searchInput.value.toLowerCase();
+    const items = listEl.querySelectorAll("li");
+
+    items.forEach(li => {
+      const text = li.querySelector(".entry-text")?.textContent.toLowerCase() || "";
+      if (text.includes(filter)) {
+        li.style.display = "";
+      } else {
+        li.style.display = "none";
+      }
+    });
+  });
+}

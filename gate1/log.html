@@ -75,11 +75,25 @@
         margin-top: 6px;
     }
     }
-
+    #searchBar {
+      padding: 8px 10px;
+      width: 90%;
+      max-width: 400px;
+      box-shadow: 0 2px 5px rgba(12,12,12,0.06);
+      border: none;
+      border-radius: 6px;
+      font-size: 1rem;
+    }
+    #searchBar:focus {
+      outline: none;
+    }
   </style>
 </head>
 <body>
   <h1>📋 Log of Called Students</h1>
+  <div style="text-align:center; margin-bottom: 16px;">
+    <input type="text" id="searchBar" placeholder="Search by name or grade..."/> 
+  </div>
   <ul id="logList"></ul>
 </body>
 </html>
