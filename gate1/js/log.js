@@ -110,19 +110,32 @@ onValue(logRef, (snapshot) => {
 });
 
 // attach search filter
-const searchInput = document.getElementById("searchBar");
-if (searchInput) {
-  searchInput.addEventListener("input", () => {
-    const filter = searchInput.value.toLowerCase();
-    const items = listEl.querySelectorAll("li");
+function activateSearchProtocols() {
+  const searchInput = document.createElement("input");
+  searchInput.id = "searchBar";
+  searchInput.type = "text";
+  searchInput.placeholder = "Search by name or grade...";
 
-    items.forEach(li => {
-      const text = li.querySelector(".entry-text")?.textContent.toLowerCase() || "";
-      if (text.includes(filter)) {
-        li.style.display = "";
-      } else {
-        li.style.display = "none";
-      }
+  // Insert between h1 and logList
+  const h1 = document.querySelector("h1");
+  const logList = document.getElementById("logList");
+
+  if (h1 && logList) {
+    h1.insertAdjacentElement("afterend", searchInput);
+    console.log("✅ Search bar inserted between h1 and log list");
+
+    searchInput.addEventListener("input", () => {
+      const filter = searchInput.value.toLowerCase();
+      const items = logList.querySelectorAll("li");
+
+      items.forEach(li => {
+        const text = li.querySelector(".entry-text")?.textContent.toLowerCase() || "";
+        li.style.display = text.includes(filter) ? "" : "none";
+      });
     });
-  });
+  } else {
+    console.error("❌ h1 or logList not found!");
+  }
 }
+
+activateSearchProtocols();
