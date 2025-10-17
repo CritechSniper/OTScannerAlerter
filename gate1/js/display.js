@@ -64,7 +64,7 @@ function speakAnnouncement(entry, key) {
   const [id, studentName, classSection] = entry.split("|");
 
   const msg = new SpeechSynthesisUtterance(
-    `${studentName} from class ${classSection}..... ${studentName} from class ${classSection}..... ${studentName} from class ${classSection}`
+    `${studentName}...${classSection}..... ${studentName}...${classSection}..... ${studentName}...${classSection}`
   );
   if (selectedVoice) msg.voice = selectedVoice;
   msg.rate = 0.95;

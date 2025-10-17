@@ -61,3 +61,6 @@ div.h2, div.p {
 	display: flex;
 	flex-direction: column;
 }
+* {
+ font-variant-numeric: tabular-nums;
+}
