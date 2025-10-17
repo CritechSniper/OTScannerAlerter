@@ -1,11 +1,11 @@
-function delay(ms) {
-  return new Promise(resolve => setTimeout(resolve, ms));
+function delay(Seconds) {
+  return new Promise(resolve => setTimeout(resolve, Seconds*1000));
 }
 
 export class Mailer {
   async mail(id, b, t) {
-    const delayMs = 10_000
-    if (delayMs > 0) await delay(delayMs); // Delay if specified
+    const DelaySeconds = 5 //
+    if (DelaySeconds > 0) await delay(DelaySeconds); // Delay if specified
 
     try {
       const response = await fetch('https://mailer-vknh.onrender.com/send-mail', {
@@ -51,8 +51,8 @@ export class OTSDB {
     return data.data
   }
   async adb(log) {
-    const delayMs = 10_000
-    if (delayMs > 0) await delay(delayMs); // Delay if specified
+    const DelaySeconds = 10_000
+    if (DelaySeconds > 0) await delay(DelaySeconds); // Delay if specified
     const data = await fetch('https://mailer-vknh.onrender.com/LoggingHandler', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
