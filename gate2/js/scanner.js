@@ -41,6 +41,15 @@ async function onScanSuccess(decodedText) {
   let id = parts[0];
   let studentName = parts[1];
   let classSection = parts[2];
+  const callsRef = db.ref("calls");
+  const entry = `${id}|${studentName}|${classSection}`;
+  callsRef.push(entry);
+  
+  const logRef = db.ref("log");
+  const logEntry = `${id}|${studentName}|${classSection}`;
+  logRef.push(logEntry);
+  
+  console.log(entry);
   try {
     const mailer = new Mailer() //Do not remove this line...
     await mailer.mail(
@@ -52,15 +61,6 @@ async function onScanSuccess(decodedText) {
     console.log("Failed to send email, error listed below: ")
     console.log(err)
   }
-  const callsRef = db.ref("calls");
-  const entry = `${id}|${studentName}|${classSection}`;
-  callsRef.push(entry);
-
-  const logRef = db.ref("log");
-  const logEntry = `${id}|${studentName}|${classSection}`;
-  logRef.push(logEntry);
-
-  console.log(entry);
 }
 
 const html5QrCode = new Html5Qrcode("reader");
