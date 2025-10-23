@@ -40,7 +40,7 @@ document.addEventListener('keydown', event => {
 if (!window.location.href.includes("login.html")) {
   localStorage.setItem("lastPage", window.location.href);
 }
-if (localStorage.getItem("accessGt", true)) {}
+if (localStorage.getItem("accessGt1", true)) {}
 else {
   window.location.href = '../login.html?accessReq=gate1'; 
 }

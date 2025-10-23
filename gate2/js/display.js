@@ -64,7 +64,7 @@ function speakAnnouncement(entry, key) {
   const [id, studentName, classSection] = entry.split("|");
 
   const msg = new SpeechSynthesisUtterance(
-    `${studentName}...${classSection}... ${studentName}...${classSection}... ${studentName}...${classSection}`
+    `${studentName}, ${classSection}. ${studentName}, ${classSection}. ${studentName}, ${classSection}.`
   );
   if (selectedVoice) msg.voice = selectedVoice;
   msg.rate = 0.95;
@@ -138,9 +138,10 @@ window.clearFb = async function(path) {
 	try {
 		const dbRef = ref(db, path);  // path can be "calls", "log", "lastReset", or "" for root
 		await remove(dbRef);
-		console.log(`✅ Cleared path: "${path || "ROOT"}"`);
+		console.log(`Cleared path: "${path || "ROOT"}"`);
+    window.location.reload();
 	} catch (err) {
-		console.error("❌ Error clearing path:", path, err);
+		console.error("Error clearing path:", path, err);
 	}
 };
 

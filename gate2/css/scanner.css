@@ -12,6 +12,7 @@ h1 {
 }
 
 .scanner-container {
+  margin: 0px 100px;
   background: white;
   padding: 15px;
   border-radius: 12px;
@@ -37,6 +38,7 @@ h1 {
 }
 
 .log-container {
+  margin: 0px 50px;
   margin-top: 30px;
   background: #fff;
   padding: 15px;
@@ -44,7 +46,8 @@ h1 {
   box-shadow: 0 4px 12px rgba(0,0,0,0.1);
   display: inline-block;
   text-align: left;
-  width: 320px;
+  min-width: 320px;
+  max-width: fit-content;
 }
 
 .log-container h2 {
@@ -61,4 +64,45 @@ h1 {
   color: green;
   max-height: 200px;
   overflow-y: auto;
+}
+
+#overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(5px);
+  z-index: 999;
+}
+#cds {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 300px;
+  height: 300px;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: var(--acent-clr);
+  border-radius: 10px;
+}
+#cds p {
+  color: white;
+}
+.cdsi {
+  border-radius: 3px;
+  width: 20px;
+  height: 150px;
+  font-size: 100px;
+  background-color: white;
+  animation: spin 2s ease-in-out infinite;
+}
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }

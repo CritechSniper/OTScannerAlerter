@@ -12,6 +12,7 @@
   <link rel="stylesheet" href="../css.css">
   <link rel="stylesheet" href="css/scanner.css">
 </head>
+
 <body>
   <h1>QR Code Scanner | Gate 2</h1>
 
@@ -20,13 +21,17 @@
     <select id="cameraSelect" title="Why are you inspecting this??!"></select>
   </div>
 
-  <p id="Cooldown">✅ Ready to scan</p>
-
   <div class="log-container">
     <h2>Scan Log</h2>
     <div class="log" id="log"></div>
   </div>
 
+  <div id="overlay">
+    <div id="cds">
+      <div class="cdsi"></div>
+      <p id="Cooldown"></p>
+    </div>
+  </div>
   <script src="../gate2.js"></script>
   <script type="module" src="js/scanner.js"></script>
 
@@ -56,4 +61,5 @@
     window.startCooldown = startCooldown;
   </script>
 </body>
+
 </html>

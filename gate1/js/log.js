@@ -16,7 +16,6 @@ const firebaseConfig = {
 	appId: "1:686097644253:web:6f722bf4e7675ba454b934",
   measurementId: "G-T13J4GN8V2"
 };
-/* ================================================ */
 
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
@@ -109,20 +108,22 @@ onValue(logRef, (snapshot) => {
   });
 });
 
-// attach search filter
 function activateSearchProtocols() {
   const searchInput = document.createElement("input");
   searchInput.id = "searchBar";
   searchInput.type = "text";
-  searchInput.placeholder = "Search by name or grade...";
+  searchInput.placeholder = "Search by name or grade...(Not filtered on word 1st letter)";
 
-  // Insert between h1 and logList
-  const h1 = document.querySelector("h1");
+  const cont = document.getElementById("cont");
   const logList = document.getElementById("logList");
 
-  if (h1 && logList) {
-    h1.insertAdjacentElement("afterend", searchInput);
-    console.log("✅ Search bar inserted between h1 and log list");
+  if (cont && logList) {
+    cont.insertAdjacentElement("afterbegin", searchInput);
+
+    searchInput.style.display = "block";
+    searchInput.style.margin = "0 auto 10px auto"; // center + spacing below
+    searchInput.style.padding = "5px 10px";
+    searchInput.style.fontSize = "16px";
 
     searchInput.addEventListener("input", () => {
       const filter = searchInput.value.toLowerCase();
@@ -134,7 +135,7 @@ function activateSearchProtocols() {
       });
     });
   } else {
-    console.error("❌ h1 or logList not found!");
+    console.error("Container or logList not found");
   }
 }
 

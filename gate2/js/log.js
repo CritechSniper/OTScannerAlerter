@@ -16,7 +16,6 @@ const firebaseConfig = {
   appId: "1:696985591809:web:e1cc535570213f20ff6000",
   measurementId: "G-7J650R6255"
 };
-/* ================================================ */
 
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
@@ -68,8 +67,8 @@ onValue(logRef, (snapshot) => {
     return;
   }
   snapshot.forEach(childSnap => {
-    const raw = childSnap.val();           // e.g. "Waleed Ammar|Grade 9 A"
-    const key = childSnap.key || "";      // push id
+    const raw = childSnap.val();           // e.g. "Waleed Ammar|Grade 9 A" \\
+    const key = childSnap.key || "";      // push id                         \\
 
     const li = document.createElement("li");
 
@@ -108,3 +107,36 @@ onValue(logRef, (snapshot) => {
     listEl.appendChild(li);
   });
 });
+
+function activateSearchProtocols() {
+  const searchInput = document.createElement("input");
+  searchInput.id = "searchBar";
+  searchInput.type = "text";
+  searchInput.placeholder = "Search by name or grade...(Not filtered on word 1st letter)";
+
+  const cont = document.getElementById("cont");
+  const logList = document.getElementById("logList");
+
+  if (cont && logList) {
+    cont.insertAdjacentElement("afterbegin", searchInput);
+
+    searchInput.style.display = "block";
+    searchInput.style.margin = "0 auto 10px auto"; // center + spacing below
+    searchInput.style.padding = "5px 10px";
+    searchInput.style.fontSize = "16px";
+
+    searchInput.addEventListener("input", () => {
+      const filter = searchInput.value.toLowerCase();
+      const items = logList.querySelectorAll("li");
+
+      items.forEach(li => {
+        const text = li.querySelector(".entry-text")?.textContent.toLowerCase() || "";
+        li.style.display = text.includes(filter) ? "" : "none";
+      });
+    });
+  } else {
+    console.error("Container or logList not found");
+  }
+}
+
+activateSearchProtocols();
