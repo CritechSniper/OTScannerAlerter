@@ -33,31 +33,5 @@
   </div>
   <script src="../gate1.js"></script>
   <script type="module" src="js/scanner.js"></script>
-
-  <script>
-    let cooldownActive = false;
-    let cooldownTime = 5; // seconds
-    let cooldownTimer;
-
-    function startCooldown() {
-      if (cooldownActive) return; // prevent stacking timers
-      cooldownActive = true;
-      let timeLeft = cooldownTime;
-      document.getElementById("Cooldown").textContent = `⏳ Cooldown: ${timeLeft}s`;
-
-      cooldownTimer = setInterval(() => {
-        timeLeft--;
-        if (timeLeft > 0) {
-          document.getElementById("Cooldown").textContent = `⏳ Cooldown: ${timeLeft}s`;
-        } else {
-          clearInterval(cooldownTimer);
-          cooldownActive = false;
-          document.getElementById("Cooldown").textContent = "✅ Ready to scan";
-        }
-      }, 1000);
-    }
-
-    window.startCooldown = startCooldown;
-  </script>
 </body>
 </html>

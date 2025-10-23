@@ -113,7 +113,7 @@ function watchCooldown() {
     if (isCooldown && lastState !== true) {
       cdo.style.display = "block";
       lastState = true;
-      cooldownEl.textContent = "⏳ Cooldown active...";
+      cooldownEl.textContent = "Saving...";
     } else if (!isCooldown && lastState !== false) {
       cdo.style.display = "none";
       lastState = false;
