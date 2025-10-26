@@ -1,21 +1,11 @@
 import { Mailer } from "../../mailer.js";
-const firebaseConfig = {
-  apiKey: "AIzaSyD1wwoZmmhWtauyOGCBhOgL_on5ulZsg-4",
-  authDomain: "bruv-8068d.firebaseapp.com",
-  databaseURL: "https://bruv-8068d-default-rtdb.europe-west1.firebasedatabase.app",
-  projectId: "bruv-8068d",
-  storageBucket: "bruv-8068d.firebasestorage.app",
-  messagingSenderId: "696985591809",
-  appId: "1:696985591809:web:e1cc535570213f20ff6000",
-  measurementId: "G-7J650R6255"
-};
 
 firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
 
 const logEl = document.getElementById("log");
 
-const SCAN_COOLDOWN = 3000;
+const SCAN_COOLDOWN = 2000;
 const formatTime = () => {
   const date = new Date();
   const parts = date.toString().split(" ")
