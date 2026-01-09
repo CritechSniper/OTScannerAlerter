@@ -1,4 +1,3 @@
-/* General page styling */
 body {
   font-family: Tahoma, Arial, sans-serif;
   background: #f5f7fa;
@@ -11,7 +10,6 @@ body {
   min-height: 100vh;
 }
 
-/* Container box */
 .container {
   background: #fff;
   padding: 40px;
@@ -22,7 +20,6 @@ body {
   width: 90%;
 }
 
-/* Background animated shapes */
 .idk1, .idk2 {
   width: 500px;
   height: 500px;
@@ -59,7 +56,6 @@ body {
   100% { transform: rotate(-25deg) scale(1); }
 }
 
-/* Headings */
 h1 {
   margin-bottom: 10px;
   font-size: 28px;
@@ -72,7 +68,6 @@ p {
   color: #555;
 }
 
-/* Options layout */
 .options {
   display: flex;
   flex-direction: column;
@@ -80,7 +75,6 @@ p {
   margin-top: 20px;
 }
 
-/* Buttons */
 .btn {
   display: block;
   background: #3498db;
@@ -99,7 +93,6 @@ p {
   box-shadow: 0 4px 10px rgba(0,0,0,0.2);
 }
 
-/* Back links */
 a {
   transition: all 0.3s ease;
   color: #3498db;

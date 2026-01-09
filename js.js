@@ -37,7 +37,6 @@ document.addEventListener('keydown', event => {
 if (!window.location.href.includes("login.html")) {
   localStorage.setItem("lastPage", window.location.href);
 }
-// Save last visited page (skip if it's login page)
 if (!window.location.href.includes("login.html")) {
   localStorage.setItem("lastPage", window.location.href);
 }

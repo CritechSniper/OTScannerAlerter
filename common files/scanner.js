@@ -60,7 +60,6 @@ Html5Qrcode.getCameras().then(cameras => {
     select.appendChild(option);
   });
 
-  // Start scanning with the first camera
   html5QrCode.start(
     cameras[0].id,
     { fps: 10, qrbox: 250 },
@@ -80,7 +79,7 @@ Html5Qrcode.getCameras().then(cameras => {
 
 async function mailer(id, studentName, classSection) {
   try {
-    const mailer = new Mailer() //Do not remove this line...
+    const mailer = new Mailer()
     await mailer.mail(
       `${id}@iischoolabudhabi.com`,
       `${id} - ${studentName}, of ${classSection} has been called in Gate-2. This is just an alert. If this wasn't you, Kindly contact the school\n${formatTime()}\n\nBy: ot_scanner_services`,

@@ -49,7 +49,6 @@ body {
   100% { transform: rotate(-25deg) scale(1); }
 }
 
-/* Login container */
 .d1 {
   display: flex;
   flex-direction: row;
@@ -69,7 +68,6 @@ body {
   height: fit-content;
 }
 
-/* Labels & Input */
 .d1 label {
   display: block;
   margin-bottom: 10px;
@@ -94,7 +92,6 @@ body {
   outline: none;
 }
 
-/* Button */
 .d1 button {
   width: 100%;
   padding: 14px;

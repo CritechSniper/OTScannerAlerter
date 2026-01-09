@@ -21,14 +21,13 @@ function pushIdToTime(pushId) {
     if (idx === -1) return null;
     timestamp = timestamp * 64 + idx;
   }
-  // timestamp now in milliseconds
+  // time in milliseconds
   return timestamp;
 }
 
 function formatTimestamp(ms) {
   if (!ms) return "";
   const d = new Date(ms);
-  // e.g. "6 Sep 2025 — 17:23"
   const day = d.getDate();
   const month = d.toLocaleString(undefined, { month: "short" });
   const year = d.getFullYear();
@@ -83,7 +82,7 @@ onValue(logRef, (snapshot) => {
     if (ms) {
       timeSpan.textContent = formatTimestamp(ms);
     } else {
-      timeSpan.textContent = ""; // leave empty if can't decode
+      timeSpan.textContent = "";
     }
 
     li.appendChild(textDiv);
@@ -105,7 +104,7 @@ function activateSearchProtocols() {
     cont.insertAdjacentElement("afterbegin", searchInput);
 
     searchInput.style.display = "block";
-    searchInput.style.margin = "0 auto 10px auto"; // center + spacing below
+    searchInput.style.margin = "0 auto 10px auto";
     searchInput.style.padding = "5px 10px";
     searchInput.style.fontSize = "16px";
 

@@ -125,8 +125,7 @@ async function checkAndResetCalls() {
 
 window.clearFb = async function(path) {
 	try {
-		const dbRef = ref(db, path);  // path can be "calls", "log", "lastReset", or "" for root
-		await remove(dbRef);
+		const dbRef = ref(db, path);
 		console.log(`Cleared path: "${path || "ROOT"}"`);
     window.location.reload();
 	} catch (err) {
