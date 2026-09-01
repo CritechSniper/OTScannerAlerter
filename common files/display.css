@@ -44,12 +44,13 @@ h1 {
 	background: var(--btn-clr);
 }
 div:not(#calls, .overlay, #clock) {
-	margin: 20px;
+	margin: 10px;
 	padding: 10px;
 	padding-bottom: 0;
 	margin-bottom: 0;
-	border-radius: 10px;
+	border-radius: 30px;
 	border: 2px solid var(--line-clr);
+	corner-shape: squircle;
 	background-color: var(--hover-clr);
 }
 div.h2, div.p {
@@ -58,8 +59,11 @@ div.h2, div.p {
 }
 /* Remove it if you want but the latest user will be put on the top for everyone to see it */
 #calls {
-	display: flex;
-	flex-direction: column;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    /* gap: 15px; */
+    padding: 20px;
+    align-items: start;
 }
 * {
  font-variant-numeric: tabular-nums;

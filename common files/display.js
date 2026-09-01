@@ -52,7 +52,7 @@ function speakAnnouncement(entry, key) {
   const [id, studentName, classSection] = entry.split("|");
 
   const msg = new SpeechSynthesisUtterance(
-    `${studentName}, ${classSection}. ${studentName}, ${classSection}. ${studentName}, ${classSection}.`
+    `${studentName}, ${classSection}. ${studentName}, ${classSection}.`
   );
   if (selectedVoice) msg.voice = selectedVoice;
   msg.rate = 0.95;
@@ -64,7 +64,7 @@ function speakAnnouncement(entry, key) {
   const container = document.getElementById("calls");
   if (container) {
     container.insertAdjacentHTML('afterbegin', `
-      <div style="font-family:Tahoma; text-align:center; margin-bottom: 10px; border-bottom: 1px solid #ccc; padding: 5px;">
+      <div style="font-family:Tahoma; text-align:center; margin-bottom: 10px; border-bottom: 1px solid #ccc;">
         <h2 class="font-ibmplex">${id} - ${studentName} - Class ${classSection}</h2>
         <p class="font-sharetech">Called at: ${calledAt}</p>
       </div>
