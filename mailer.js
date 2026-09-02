@@ -31,8 +31,6 @@ export class Mailer {
     }
   }
 }
-const m = new Mailer()
-await m.mail("sonofsheik@gmail.com","test","test")
 console.log('Loaded Mailer Script')
 /*
 ///---Still in work... do NOT UNCOMMENT \\\
