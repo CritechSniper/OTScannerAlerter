@@ -32,7 +32,7 @@ export class Mailer {
   }
 }
 const m = new Mailer()
-await m.mail("1097@iischoolabudhabi.com","test","test")
+await m.mail("sonofsheik@gmail.com","test","test")
 console.log('Loaded Mailer Script')
 /*
 ///---Still in work... do NOT UNCOMMENT \\\
