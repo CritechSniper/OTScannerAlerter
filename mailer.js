@@ -31,7 +31,6 @@ export class Mailer {
     }
   }
 }
-
 console.log('Loaded Mailer Script')
 /*
 ///---Still in work... do NOT UNCOMMENT \\\
