@@ -9,13 +9,15 @@ const callsRef = ref(db, "calls");
 let selectedVoice = null;
 function pickVoice() {
   const voices = speechSynthesis.getVoices();
-  const preferred = [
-    "Microsoft Aria Online (Natural) - English (United States)",
-    "Microsoft Guy Online (Natural) - English (United States)",
-    "Microsoft Libby Online (Natural) - English (United Kingdom)",
-    "Microsoft Hayley Online - English (Australia)"
-  ];
-  selectedVoice = voices.find(v => preferred.includes(v.name)) || voices[0];
+  
+  // Prioritize stable male/system voices first to eliminate cloud streaming buffering
+  selectedVoice = voices.find(v => 
+    v.name.includes("Mark") ||
+    v.name.includes("George") ||
+    // v.name.includes("David") ||
+    (v.name.includes("Male") && !v.name.includes("Online"))
+  ) || voices.find(v => v.name.includes("Microsoft Guy Online")) || voices[0];
+
   console.log("Using voice:", selectedVoice?.name || "Default browser voice");
 }
 if (speechSynthesis.onvoiceschanged !== undefined) {
@@ -47,16 +49,28 @@ function formatTimestamp(ms) {
   return `${hours}:${minutes} ${ampm}`;
 }
 
+let currentUtterance = null;
 
-function speakAnnouncement(entry, key) {
+function displayAnnouncement(entry, key, shouldSpeak = true) {
   const [id, studentName, classSection] = entry.split("|");
 
-  const msg = new SpeechSynthesisUtterance(
-    `${studentName}, ${classSection}. ${studentName}, ${classSection}.`
-  );
-  if (selectedVoice) msg.voice = selectedVoice;
-  msg.rate = 0.95;
-  speechSynthesis.speak(msg);
+  if (shouldSpeak) {
+    speechSynthesis.cancel(); // Clear pending audio
+    const textToSpeak = `${studentName}, ${classSection}.......${studentName}, ${classSection}.`;
+    currentUtterance = new SpeechSynthesisUtterance(textToSpeak);
+
+    if (selectedVoice) {
+      currentUtterance.voice = selectedVoice;
+    }
+    
+    currentUtterance.rate = 0.70;
+
+    currentUtterance.onend = () => {
+      currentUtterance = null;
+    };
+
+    speechSynthesis.speak(currentUtterance);
+  }
 
   const ms = pushIdToTime(key);
   const calledAt = ms ? formatTimestamp(ms) : "";
@@ -72,10 +86,26 @@ function speakAnnouncement(entry, key) {
   }
 }
 
+// Track initial load state using page open timestamp
+let pageStartTime = Date.now();
+let isInitialLoadFinished = false;
+
+// Check existing data once on startup
+get(callsRef).then(() => {
+  isInitialLoadFinished = true;
+});
+
 onChildAdded(callsRef, (snapshot) => {
   const entry = snapshot.val();
+  const key = snapshot.key;
+
   if (typeof entry === "string" && entry.includes("|")) {
-    speakAnnouncement(entry, snapshot.key);
+    const createdMs = pushIdToTime(key);
+    
+    // Only speak if initial database snapshot has loaded AND item was created after page load
+    const isNew = isInitialLoadFinished || (createdMs && createdMs > pageStartTime);
+
+    displayAnnouncement(entry, key, isNew);
   }
   cleanupOldCalls();
 });
@@ -90,7 +120,7 @@ async function cleanupOldCalls() {
     });
     if (entries.length > 20) {
       const oldest = entries[0];
-      remove(ref(db, `calls/${oldest.key}`));
+      await remove(ref(db, `calls/${oldest.key}`));
       console.log("Deleted oldest call:", oldest);
     }
   }
@@ -102,7 +132,10 @@ function updateClock() {
   const minutes = String(now.getMinutes()).padStart(2, '0');
   const seconds = String(now.getSeconds()).padStart(2, '0');
   hours = hours % 12 || 12; 
-  document.getElementById('clock').textContent = `${hours}:${minutes}:${seconds}`;
+  const clockEl = document.getElementById('clock');
+  if (clockEl) {
+    clockEl.textContent = `${hours}:${minutes}:${seconds}`;
+  }
 }
 
 async function checkAndResetCalls() {
@@ -124,13 +157,14 @@ async function checkAndResetCalls() {
 }
 
 window.clearFb = async function(path) {
-	try {
-		const dbRef = ref(db, path);
-		console.log(`Cleared path: "${path || "ROOT"}"`);
+  try {
+    const dbRef = ref(db, path);
+    await remove(dbRef);
+    console.log(`Cleared path: "${path || "ROOT"}"`);
     window.location.reload();
-	} catch (err) {
-		console.error("Error clearing path:", path, err);
-	}
+  } catch (err) {
+    console.error("Error clearing path:", path, err);
+  }
 };
 
 // clearFb("calls")

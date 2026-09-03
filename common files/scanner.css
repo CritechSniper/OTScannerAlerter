@@ -16,7 +16,7 @@ h1 {
   background: white;
   padding: 15px;
   border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   display: inline-block;
 }
 
@@ -43,7 +43,7 @@ h1 {
   background: #fff;
   padding: 15px;
   border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   display: inline-block;
   text-align: left;
   min-width: 320px;
@@ -64,6 +64,11 @@ h1 {
   color: green;
   max-height: 200px;
   overflow-y: auto;
+  >  div {
+    font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: black;
+    margin-bottom: 5px;
+  }
 }
 
 #overlay {
@@ -77,6 +82,7 @@ h1 {
   backdrop-filter: blur(5px);
   z-index: 999;
 }
+
 #cds {
   display: flex;
   flex-direction: column;
@@ -88,21 +94,69 @@ h1 {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  background-color: var(--acent-clr);
+  background-color: #212121;
   border-radius: 10px;
 }
-#cds p {
-  color: white;
+
+.loader-con {
+  position: relative;
+  width: 80%;
+  height: 100px;
+  overflow: hidden;
 }
-.cdsi {
-  border-radius: 3px;
-  width: 20px;
-  height: 150px;
-  font-size: 100px;
-  background-color: white;
-  animation: spin 2s ease-in-out infinite;
+
+.pfile {
+  position: absolute;
+  bottom: 25px;
+  width: 40px;
+  height: 50px;
+  background: linear-gradient(90deg, #b324db, #ac8dcb);
+  border-radius: 4px;
+  transform-origin: center;
+  animation: flyRight 3s ease-in-out infinite;
+  opacity: 0;
 }
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+
+.pfile::before {
+  content: "";
+  position: absolute;
+  top: 6px;
+  left: 6px;
+  width: 28px;
+  height: 4px;
+  background-color: #ffffff;
+  border-radius: 2px;
+}
+
+.pfile::after {
+  content: "";
+  position: absolute;
+  top: 13px;
+  left: 6px;
+  width: 18px;
+  height: 4px;
+  background-color: #ffffff;
+  border-radius: 2px;
+}
+
+@keyframes flyRight {
+  0% {
+    left: -10%;
+    transform: scale(0);
+    opacity: 0;
+  }
+  50% {
+    left: 45%;
+    transform: scale(1.2);
+    opacity: 1;
+  }
+  100% {
+    left: 100%;
+    transform: scale(0);
+    opacity: 1;
+  }
+}
+
+.pfile {
+  animation-delay: calc(var(--i) * 0.6s);
 }

@@ -1,39 +1,48 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Gate 1 Scanner</title>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Gate 1 Scanner</title>
 
-  <script src="https://www.gstatic.com/firebasejs/10.12.3/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.12.3/firebase-database-compat.js"></script>
-  <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.3/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.3/firebase-database-compat.js"></script>
+    <script
+      src="https://unpkg.com/html5-qrcode"
+      type="text/javascript"
+    ></script>
 
-  <link rel="stylesheet" href="../css.css">
-  <link rel="stylesheet" href="../common files/scanner.css">
-</head>
-<body>
-  <h1>QR Code Scanner | Gate 1</h1>
+    <link rel="stylesheet" href="../css.css" />
+    <link rel="stylesheet" href="../common files/scanner.css" />
+  </head>
+  <body>
+    <h1>QR Code Scanner | Gate 1</h1>
 
-  <div class="scanner-container">
-    <div id="reader"></div>
-    <select id="cameraSelect" title="Why are you inspecting this??!"></select>
-  </div>
-
-  <div class="log-container">
-    <h2>Scan Log</h2>
-    <div class="log" id="log"></div>
-  </div>
-
-  <div id="overlay">
-    <div id="cds">
-      <div class="cdsi"></div>
-      <p id="Cooldown"></p>
+    <div class="scanner-container">
+      <div id="reader"></div>
+      <select id="cameraSelect" title="Why are you inspecting this??!"></select>
     </div>
-  </div>
-  <script src="../common files/gate1.js"></script>
-  <script src="../apis/gate1.js"></script>
-  <script type="module" src="../common files/scanner.js"></script>
-  <script src="../ultrajs.js"></script>
-</body>
+
+    <div class="log-container">
+      <h2>Scan Log</h2>
+      <div class="log" id="log"></div>
+    </div>
+
+    <div id="overlay">
+      <div id="cds">
+        <div class="loader-con">
+          <div style="--i: 0" class="pfile"></div>
+          <div style="--i: 1" class="pfile"></div>
+          <div class="pfile" style="--i: 2"></div>
+          <div class="pfile" style="--i: 3"></div>
+          <div class="pfile" style="--i: 4"></div>
+          <div class="pfile" style="--i: 5"></div>
+        </div>
+      </div>
+    </div>
+    <script src="../common files/gate1.js"></script>
+    <script src="../apis/gate1.js"></script>
+    <script type="module" src="../common files/scanner.js"></script>
+    <script src="../ultrajs.js"></script>
+  </body>
 </html>

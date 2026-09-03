@@ -25,8 +25,10 @@ async function onScanSuccess(decodedText) {
     isCooldown = false;
   }, SCAN_COOLDOWN);
 
-  logEl.textContent += "Scanned: " + decodedText + "\n";
-  // setTimeout(() => logEl.textContent = "", 3000);
+  // logEl.textContent += "Scanned: " + decodedText + "\n";
+  const logged = document.createElement("div");
+  logged.textContent = "Scanned: " + decodedText;
+  logEl.appendChild(logged);
 
   let [id, studentName, classSection] = decodedText.split(" - ");
   const entry = `${id}|${studentName}|${classSection}`;
@@ -90,7 +92,6 @@ async function mailer(id, studentName, classSection) {
     console.log(err)
   }
 }
-const cooldownEl = document.getElementById("Cooldown");
 
 function watchCooldown() {
   let lastState = null;
@@ -102,11 +103,9 @@ function watchCooldown() {
     if (isCooldown && lastState !== true) {
       cdo.style.display = "block";
       lastState = true;
-      cooldownEl.textContent = "Saving...";
     } else if (!isCooldown && lastState !== false) {
       cdo.style.display = "none";
       lastState = false;
-      cooldownEl.textContent = "";
     }
   }, 100);
 }
