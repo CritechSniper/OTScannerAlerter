@@ -96,6 +96,11 @@ h1 {
   transform: translate(-50%, -50%);
   background-color: #212121;
   border-radius: 10px;
+  > p {
+    color: white;
+    font-size: 18px;
+    margin-bottom: 20px;
+  }
 }
 
 .loader-con {

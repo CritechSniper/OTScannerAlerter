@@ -16,30 +16,41 @@ const formatTime = () => {
 let isCooldown = false;
 
 async function onScanSuccess(decodedText) {
-  if (isCooldown) {
-    return;
-  }
+  if (isCooldown) return;
 
   isCooldown = true;
   setTimeout(() => {
     isCooldown = false;
   }, SCAN_COOLDOWN);
 
-  // logEl.textContent += "Scanned: " + decodedText + "\n";
-  const logged = document.createElement("div");
-  logged.textContent = "Scanned: " + decodedText;
-  logEl.appendChild(logged);
+  let [id, studentName, rawClassSection, teacher] = decodedText.split(" - ");
 
-  let [id, studentName, classSection] = decodedText.split(" - ");
+  id = id ? id.trim() : "";
+  studentName = studentName ? studentName.trim() : "";
+  const classSection = rawClassSection
+    ? rawClassSection.replace(/^Grade\s+/i, "").trim()
+    : "";
+
+  // output format "0000|Waleed|10 A"
   const entry = `${id}|${studentName}|${classSection}`;
 
   const callsRef = db.ref("calls");
   const logRef = db.ref("log");
 
-  await Promise.all([callsRef.push(entry), logRef.push(entry)]);
+  const newKey = callsRef.push().key;
+  const updates = {};
+  updates[`calls/${newKey}`] = entry;
+  updates[`log/${newKey}`] = entry;
+
+  await db.ref().update(updates);
+
+  const logged = document.createElement("div");
+  logged.textContent = `${id} • ${studentName} • ${classSection}`;
+  logEl.insertBefore(logged, logEl.firstChild);
 
   console.log(entry);
   mailer(id, studentName, classSection);
+  tagUnderLoader(id, studentName, classSection);
 }
 
 const html5QrCode = new Html5Qrcode("reader");
@@ -60,7 +71,7 @@ Html5Qrcode.getCameras()
       select.appendChild(option);
     });
 
-    html5QrCode.start(cameras[0].id, { fps: 10, qrbox: 250 }, onScanSuccess);
+    html5QrCode.start(cameras[0].id, { fps: 20, qrbox: 250 }, onScanSuccess);
 
     select.onchange = () => {
       html5QrCode
@@ -68,7 +79,7 @@ Html5Qrcode.getCameras()
         .then(() => {
           html5QrCode.start(
             select.value,
-            { fps: 10, qrbox: 250 },
+            { fps: 20, qrbox: 250 },
             onScanSuccess,
           );
         })
@@ -129,6 +140,11 @@ function watchCooldown() {
       lastState = false;
     }
   }, 100);
+}
+
+const scannedPerson = document.getElementById("scannedPerson");
+function tagUnderLoader(id, studentName, classSection) {
+  scannedPerson.textContent = `${id} ${studentName} ${classSection}`;
 }
 
 watchCooldown();

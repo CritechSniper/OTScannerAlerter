@@ -1,5 +1,11 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
-import { getDatabase, ref, query, orderByKey, onValue } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-database.js";
+import {
+  getDatabase,
+  ref,
+  query,
+  orderByKey,
+  onValue,
+} from "https://www.gstatic.com/firebasejs/10.12.5/firebase-database.js";
 
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
@@ -8,9 +14,12 @@ const logRef = query(ref(db, "log"), orderByKey());
 
 const listEl = document.getElementById("logList");
 if (!listEl) {
-  console.error("No #logList element found. Add <ul id=\"logList\"></ul> to the page.");
+  console.error(
+    'No #logList element found. Add <ul id="logList"></ul> to the page.',
+  );
 }
-const PUSH_CHARS = "-0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz";
+const PUSH_CHARS =
+  "-0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz";
 
 function pushIdToTime(pushId) {
   if (!pushId || pushId.length < 8) return null;
@@ -49,9 +58,9 @@ onValue(logRef, (snapshot) => {
     listEl.appendChild(empty);
     return;
   }
-  snapshot.forEach(childSnap => {
-    const raw = childSnap.val();           // e.g. "Waleed Ammar|Grade 9 A" \\
-    const key = childSnap.key || "";      // push id                         \\
+  snapshot.forEach((childSnap) => {
+    const raw = childSnap.val();
+    const key = childSnap.key || "";
 
     const li = document.createElement("li");
 
@@ -60,14 +69,17 @@ onValue(logRef, (snapshot) => {
 
     let name = raw;
     let grade = "";
+    let status = "0";
+
     if (typeof raw === "string" && raw.includes("|")) {
       const parts = raw.split("|");
-      // id = parts[0].trim();      // studentId
-      name = parts[1].trim();   // studentName
-      grade = parts[2].trim();  // classSection
+      name = parts[1] ? parts[1].trim() : "";
+      grade = parts[2] ? parts[2].trim() : "";
+      status = parts[3] ? parts[3].trim() : "0";
     } else if (raw && typeof raw === "object") {
       name = raw.name || raw.fullName || raw.student || JSON.stringify(raw);
       grade = raw.grade || raw.class || "";
+      status = raw.status || "0";
     } else {
       name = String(raw);
     }
@@ -75,15 +87,19 @@ onValue(logRef, (snapshot) => {
     const displayText = grade ? `${name} - ${grade}` : name;
     textDiv.textContent = displayText;
 
+    // Render Green Status Badge if departed
+    if (status === "1") {
+      const statusBadge = document.createElement("span");
+      statusBadge.className = "status-badge";
+      statusBadge.textContent = "Teacher Confirmed";
+      textDiv.appendChild(statusBadge);
+    }
+
     const timeSpan = document.createElement("span");
     timeSpan.className = "entry-time";
 
     const ms = pushIdToTime(key);
-    if (ms) {
-      timeSpan.textContent = formatTimestamp(ms);
-    } else {
-      timeSpan.textContent = "";
-    }
+    timeSpan.textContent = ms ? formatTimestamp(ms) : "";
 
     li.appendChild(textDiv);
     li.appendChild(timeSpan);
@@ -95,7 +111,8 @@ function activateSearchProtocols() {
   const searchInput = document.createElement("input");
   searchInput.id = "searchBar";
   searchInput.type = "text";
-  searchInput.placeholder = "Search by name or grade...(Not filtered on word 1st letter)";
+  searchInput.placeholder =
+    "Search by name or grade...(Not filtered on word 1st letter)";
 
   const cont = document.getElementById("cont");
   const logList = document.getElementById("logList");
@@ -112,8 +129,9 @@ function activateSearchProtocols() {
       const filter = searchInput.value.toLowerCase();
       const items = logList.querySelectorAll("li");
 
-      items.forEach(li => {
-        const text = li.querySelector(".entry-text")?.textContent.toLowerCase() || "";
+      items.forEach((li) => {
+        const text =
+          li.querySelector(".entry-text")?.textContent.toLowerCase() || "";
         li.style.display = text.includes(filter) ? "" : "none";
       });
     });
