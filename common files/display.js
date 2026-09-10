@@ -1,40 +1,52 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js";
-import { getDatabase, ref, onChildAdded, remove, query, limitToFirst, get, set } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-database.js";
+import {
+  getDatabase,
+  ref,
+  onChildAdded,
+  onChildChanged,
+  remove,
+  query,
+  limitToFirst,
+  get,
+  set,
+  update,
+} from "https://www.gstatic.com/firebasejs/9.6.10/firebase-database.js";
 
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
-
 const callsRef = ref(db, "calls");
 
 let selectedVoice = null;
 function pickVoice() {
   const voices = speechSynthesis.getVoices();
-  const preferred = [
-    "Microsoft Aria Online (Natural) - English (United States)",
-    "Microsoft Guy Online (Natural) - English (United States)",
-    "Microsoft Libby Online (Natural) - English (United Kingdom)",
-    "Microsoft Hayley Online - English (Australia)"
-  ];
-  selectedVoice = voices.find(v => preferred.includes(v.name)) || voices[0];
-  console.log("Using voice:", selectedVoice?.name || "Default browser voice");
+  selectedVoice =
+    voices.find(
+      (v) =>
+        v.name.includes("Mark") ||
+        v.name.includes("George") ||
+        (v.name.includes("Male") && !v.name.includes("Online")),
+    ) ||
+    voices.find((v) => v.name.includes("Microsoft Guy Online")) ||
+    voices[0];
 }
 if (speechSynthesis.onvoiceschanged !== undefined) {
   speechSynthesis.onvoiceschanged = pickVoice;
 }
 pickVoice();
 
-const PUSH_CHARS = "-0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz";
+const PUSH_CHARS =
+  "-0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz";
 
 function pushIdToTime(pushId) {
   if (!pushId || pushId.length < 8) return null;
   let timestamp = 0;
   for (let i = 0; i < 8; i++) {
-    const c = pushId.charAt(i);
-    const idx = PUSH_CHARS.indexOf(c);
+    const char = pushId.charAt(i);
+    const idx = PUSH_CHARS.indexOf(char);
     if (idx === -1) return null;
     timestamp = timestamp * 64 + idx;
   }
-  return timestamp; // ms
+  return timestamp;
 }
 
 function formatTimestamp(ms) {
@@ -47,37 +59,115 @@ function formatTimestamp(ms) {
   return `${hours}:${minutes} ${ampm}`;
 }
 
+let currentUtterance = null;
 
-function speakAnnouncement(entry, key) {
-  const [id, studentName, classSection] = entry.split("|");
+function displayAnnouncement(entry, key, shouldSpeak = true) {
+  const [id, studentName, classSection, status = "0"] = entry.split("|");
 
-  const msg = new SpeechSynthesisUtterance(
-    `${studentName}, ${classSection}. ${studentName}, ${classSection}.`
-  );
-  if (selectedVoice) msg.voice = selectedVoice;
-  msg.rate = 0.95;
-  speechSynthesis.speak(msg);
+  if (shouldSpeak) {
+    speechSynthesis.cancel();
+    const textToSpeak = `${studentName}, ${classSection}.......${studentName}, ${classSection}.`;
+    currentUtterance = new SpeechSynthesisUtterance(textToSpeak);
+    if (selectedVoice) currentUtterance.voice = selectedVoice;
+    currentUtterance.rate = 0.7;
+    currentUtterance.onend = () => { currentUtterance = null; };
+    speechSynthesis.speak(currentUtterance);
+  }
 
   const ms = pushIdToTime(key);
   const calledAt = ms ? formatTimestamp(ms) : "";
-
   const container = document.getElementById("calls");
+
   if (container) {
-    container.insertAdjacentHTML('afterbegin', `
-      <div style="font-family:Tahoma; text-align:center; margin-bottom: 10px; border-bottom: 1px solid #ccc;">
-        <h2 class="font-ibmplex">${id} - ${studentName} - Class ${classSection}</h2>
-        <p class="font-sharetech">Called at: ${calledAt}</p>
-      </div>
-    `);
+    const existingCard = document.getElementById(`card-${key}`);
+    const isReceived = status === "1";
+
+    // If card exists (e.g. state changed via Firebase update), update card in-place
+    if (existingCard) {
+      const dot = existingCard.querySelector(".status-dot");
+      const btn = existingCard.querySelector(".confirm-btn");
+      if (dot) dot.className = `status-dot ${isReceived ? "status-green" : "status-red"}`;
+      if (btn) {
+        btn.className = `confirm-btn ${isReceived ? "btn-reset" : "btn-depart"}`;
+        btn.textContent = isReceived ? "Mark as Waiting" : "Confirm Departure";
+        btn.setAttribute("onclick", `window.confirmDeparture('${key}', '${entry}')`);
+      }
+      return;
+    }
+
+    // Insert new card
+    container.insertAdjacentHTML(
+      "afterbegin",
+      `
+        <div id="card-${key}" class="student-card" onclick="window.toggleCardDrawer('${key}')">
+          <span class="status-dot ${isReceived ? "status-green" : "status-red"}"></span>
+          <h2 class="font-ibmplex">${id} <span id="dot">•</span> ${studentName} <span id="dot">•</span> ${classSection}</h2>
+          <p class="font-sharetech">Called at: ${calledAt}</p>
+          
+          <div id="drawer-${key}" class="action-drawer" style="display: none;" onclick="event.stopPropagation()">
+            <button 
+              class="confirm-btn ${isReceived ? "btn-reset" : "btn-depart"}" 
+              onclick="window.confirmDeparture('${key}', '${entry}')">
+              ${isReceived ? "Mark as Waiting" : "Confirm Departure"}
+            </button>
+          </div>
+        </div>
+      `
+    );
   }
 }
 
+// Global scope attachments for ES Module accessibility
+window.toggleCardDrawer = function (key) {
+  const drawer = document.getElementById(`drawer-${key}`);
+  if (drawer) {
+    const isHidden = drawer.style.display === "none";
+    document.querySelectorAll(".action-drawer").forEach((d) => (d.style.display = "none"));
+    drawer.style.display = isHidden ? "block" : "none";
+  }
+};
+
+window.confirmDeparture = function (key, currentEntry) {
+  const parts = currentEntry.split("|");
+  const currentStatus = parts[3] || "0";
+  const newStatus = currentStatus === "1" ? "0" : "1";
+
+  const updatedEntry = `${parts[0]}|${parts[1]}|${parts[2]}|${newStatus}`;
+
+  // Update both nodes in a single atomic write
+  const updates = {};
+  updates[`calls/${key}`] = updatedEntry;
+  updates[`log/${key}`] = updatedEntry;
+
+  update(ref(db), updates);
+};
+let pageStartTime = Date.now();
+let isInitialLoadFinished = false;
+
+get(callsRef).then(() => {
+  isInitialLoadFinished = true;
+});
+
+// Listener for NEW calls
 onChildAdded(callsRef, (snapshot) => {
   const entry = snapshot.val();
+  const key = snapshot.key;
+
   if (typeof entry === "string" && entry.includes("|")) {
-    speakAnnouncement(entry, snapshot.key);
+    const createdMs = pushIdToTime(key);
+    const isNew = isInitialLoadFinished || (createdMs && createdMs > pageStartTime);
+    displayAnnouncement(entry, key, isNew);
   }
   cleanupOldCalls();
+});
+
+// Listener for STATUS UPDATES across screens (without re-speaking)
+onChildChanged(callsRef, (snapshot) => {
+  const entry = snapshot.val();
+  const key = snapshot.key;
+  if (typeof entry === "string" && entry.includes("|")) {
+    displayAnnouncement(entry, key, false);
+  }
 });
 
 async function cleanupOldCalls() {
@@ -85,13 +175,12 @@ async function cleanupOldCalls() {
   const snap = await get(q);
   if (snap.exists()) {
     const entries = [];
-    snap.forEach(child => {
+    snap.forEach((child) => {
       entries.push({ key: child.key, val: child.val() });
     });
     if (entries.length > 20) {
       const oldest = entries[0];
-      remove(ref(db, `calls/${oldest.key}`));
-      console.log("Deleted oldest call:", oldest);
+      await remove(ref(db, `calls/${oldest.key}`));
     }
   }
 }
@@ -99,23 +188,24 @@ async function cleanupOldCalls() {
 function updateClock() {
   const now = new Date();
   let hours = now.getHours();
-  const minutes = String(now.getMinutes()).padStart(2, '0');
-  const seconds = String(now.getSeconds()).padStart(2, '0');
-  hours = hours % 12 || 12; 
-  document.getElementById('clock').textContent = `${hours}:${minutes}:${seconds}`;
+  const minutes = String(now.getMinutes()).padStart(2, "0");
+  const seconds = String(now.getSeconds()).padStart(2, "0");
+  hours = hours % 12 || 12;
+  const clockEl = document.getElementById("clock");
+  if (clockEl) {
+    clockEl.textContent = `${hours}:${minutes}:${seconds}`;
+  }
 }
 
 async function checkAndResetCalls() {
-  const resetRef = ref(db, 'lastReset');
-  const currentDay = new Date().toISOString().split("T")[0]; // YYYY-MM-DD
+  const resetRef = ref(db, "lastReset");
+  const currentDay = new Date().toISOString().split("T")[0];
 
   try {
     const snapshot = await get(resetRef);
     if (!snapshot.exists() || snapshot.val() !== currentDay) {
-      // Clear only /calls
-      await remove(ref(db, 'calls'));
+      await remove(ref(db, "calls"));
       await set(resetRef, currentDay);
-      console.log("New day, cleared calls");
       window.location.reload();
     }
   } catch (error) {
@@ -123,14 +213,13 @@ async function checkAndResetCalls() {
   }
 }
 
-window.clearFb = async function(path) {
-	try {
-		const dbRef = ref(db, path);
-		console.log(`Cleared path: "${path || "ROOT"}"`);
+window.clearFb = async function (path) {
+  try {
+    await remove(ref(db, path));
     window.location.reload();
-	} catch (err) {
-		console.error("Error clearing path:", path, err);
-	}
+  } catch (err) {
+    console.error("Error clearing path:", path, err);
+  }
 };
 
 // clearFb("calls")
