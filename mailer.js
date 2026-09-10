@@ -32,8 +32,6 @@ export class Mailer {
   }
 }
 console.log('Loaded Mailer Script')
-const m = new Mailer()
-await m.mail("1097@iischoolabudhabi.com","t","t")
 /*
 ///---Still in work... do NOT UNCOMMENT \\\
 export class OTSDB {
