@@ -18,19 +18,18 @@ const callsRef = ref(db, "calls");
 
 let selectedVoice = null;
 function pickVoice() {
-  const voices = speechSynthesis.getVoices();
+  const voices = window.speechSynthesis.getVoices();
+  if (!voices.length) return;
+
   selectedVoice =
-    voices.find(
-      (v) =>
-        v.name.includes("Mark") ||
-        v.name.includes("George") ||
-        (v.name.includes("Male") && !v.name.includes("Online")),
-    ) ||
-    voices.find((v) => v.name.includes("Microsoft Guy Online")) ||
+    voices.find((v) => v.name.includes("Google US English") || v.name.includes("Google UK English Male")) ||
+    voices.find((v) => v.name.includes("Google") && v.name.includes("Male")) ||
+    voices.find((v) => v.name.includes("David") || v.name.includes("Mark") || v.name.includes("George")) ||
+    voices.find((v) => v.name.includes("Male")) ||
     voices[0];
 }
-if (speechSynthesis.onvoiceschanged !== undefined) {
-  speechSynthesis.onvoiceschanged = pickVoice;
+if (typeof window !== "undefined" && "speechSynthesis" in window) {
+  window.speechSynthesis.onvoiceschanged = pickVoice;
 }
 pickVoice();
 

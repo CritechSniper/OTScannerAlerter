@@ -58,3 +58,9 @@ function gate(name) {
   // Expose globally
   window.conPinG = conPinG;
 })();
+
+document.addEventListener("keydown", function (event) {
+  if (event.key === "Enter") {
+    document.getElementById("loginBtn").click();
+  }
+});
