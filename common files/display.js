@@ -22,9 +22,18 @@ function pickVoice() {
   if (!voices.length) return;
 
   selectedVoice =
-    voices.find((v) => v.name.includes("Google US English") || v.name.includes("Google UK English Male")) ||
+    voices.find(
+      (v) =>
+        v.name.includes("Google US English") ||
+        v.name.includes("Google UK English Male"),
+    ) ||
     voices.find((v) => v.name.includes("Google") && v.name.includes("Male")) ||
-    voices.find((v) => v.name.includes("David") || v.name.includes("Mark") || v.name.includes("George")) ||
+    voices.find(
+      (v) =>
+        v.name.includes("David") ||
+        v.name.includes("Mark") ||
+        v.name.includes("George"),
+    ) ||
     voices.find((v) => v.name.includes("Male")) ||
     voices[0];
 }
@@ -58,19 +67,45 @@ function formatTimestamp(ms) {
   return `${hours}:${minutes} ${ampm}`;
 }
 
-let currentUtterance = null;
+// Speech Queue State Management
+const speechQueue = [];
+let isSpeaking = false;
+
+function processSpeechQueue() {
+  if (isSpeaking || speechQueue.length === 0) return;
+
+  isSpeaking = true;
+  const textToSpeak = speechQueue.shift();
+  const utterance = new SpeechSynthesisUtterance(textToSpeak);
+
+  if (selectedVoice) utterance.voice = selectedVoice;
+  utterance.rate = 1.0;
+
+  utterance.onend = () => {
+    isSpeaking = false;
+    processSpeechQueue(); // Speak next item in queue
+  };
+
+  utterance.onerror = (e) => {
+    console.error("Speech error:", e);
+    isSpeaking = false;
+    processSpeechQueue(); // Skip and move to next on error
+  };
+
+  speechSynthesis.speak(utterance);
+}
+
+function queueSpeech(text) {
+  speechQueue.push(text);
+  processSpeechQueue();
+}
 
 function displayAnnouncement(entry, key, shouldSpeak = true) {
   const [id, studentName, classSection, status = "0"] = entry.split("|");
 
   if (shouldSpeak) {
-    speechSynthesis.cancel();
     const textToSpeak = `${studentName}, ${classSection}.......${studentName}, ${classSection}.`;
-    currentUtterance = new SpeechSynthesisUtterance(textToSpeak);
-    if (selectedVoice) currentUtterance.voice = selectedVoice;
-    currentUtterance.rate = 0.7;
-    currentUtterance.onend = () => { currentUtterance = null; };
-    speechSynthesis.speak(currentUtterance);
+    queueSpeech(textToSpeak);
   }
 
   const ms = pushIdToTime(key);
@@ -85,11 +120,15 @@ function displayAnnouncement(entry, key, shouldSpeak = true) {
     if (existingCard) {
       const dot = existingCard.querySelector(".status-dot");
       const btn = existingCard.querySelector(".confirm-btn");
-      if (dot) dot.className = `status-dot ${isReceived ? "status-green" : "status-red"}`;
+      if (dot)
+        dot.className = `status-dot ${isReceived ? "status-green" : "status-red"}`;
       if (btn) {
         btn.className = `confirm-btn ${isReceived ? "btn-reset" : "btn-depart"}`;
         btn.textContent = isReceived ? "Mark as Waiting" : "Confirm Departure";
-        btn.setAttribute("onclick", `window.confirmDeparture('${key}', '${entry}')`);
+        btn.setAttribute(
+          "onclick",
+          `window.confirmDeparture('${key}', '${entry}')`,
+        );
       }
       return;
     }
@@ -111,7 +150,7 @@ function displayAnnouncement(entry, key, shouldSpeak = true) {
             </button>
           </div>
         </div>
-      `
+      `,
     );
   }
 }
@@ -121,7 +160,9 @@ window.toggleCardDrawer = function (key) {
   const drawer = document.getElementById(`drawer-${key}`);
   if (drawer) {
     const isHidden = drawer.style.display === "none";
-    document.querySelectorAll(".action-drawer").forEach((d) => (d.style.display = "none"));
+    document
+      .querySelectorAll(".action-drawer")
+      .forEach((d) => (d.style.display = "none"));
     drawer.style.display = isHidden ? "block" : "none";
   }
 };
@@ -140,6 +181,7 @@ window.confirmDeparture = function (key, currentEntry) {
 
   update(ref(db), updates);
 };
+
 let pageStartTime = Date.now();
 let isInitialLoadFinished = false;
 
@@ -154,7 +196,8 @@ onChildAdded(callsRef, (snapshot) => {
 
   if (typeof entry === "string" && entry.includes("|")) {
     const createdMs = pushIdToTime(key);
-    const isNew = isInitialLoadFinished || (createdMs && createdMs > pageStartTime);
+    const isNew =
+      isInitialLoadFinished || (createdMs && createdMs > pageStartTime);
     displayAnnouncement(entry, key, isNew);
   }
   cleanupOldCalls();
@@ -220,11 +263,6 @@ window.clearFb = async function (path) {
     console.error("Error clearing path:", path, err);
   }
 };
-
-// clearFb("calls")
-// clearFb("log")
-// clearFb("lastReset")
-// clearFb("")   // DANGER: wipes entire database
 
 console.log("clearFb()");
 checkAndResetCalls();
