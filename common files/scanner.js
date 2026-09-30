@@ -5,8 +5,17 @@ firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
 
 // --- Configuration & Constants ---
-const SCAN_COOLDOWN_SEC = 5; // Standardized cooldown time in seconds
+const SCAN_COOLDOWN_SEC = 5;
 const SCAN_COOLDOWN_MS = SCAN_COOLDOWN_SEC * 1000;
+
+// Helper to get local date key format: "YYYY-MM-DD"
+function getTodayKey() {
+  const d = new Date();
+  const year = d.getFullYear();
+  const month = String(d.getMonth() + 1).padStart(2, "0");
+  const day = String(d.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+}
 
 // --- State Variables ---
 let isCooldown = false;
@@ -83,16 +92,26 @@ async function onScanSuccess(decodedText) {
   studentName = studentName.trim();
   const classSection = rawClassSection.replace(/^Grade\s+/i, "").trim();
 
-  // Database Format: "0000|Waleed|10 A"
-  const entry = `${id}|${studentName}|${classSection}`;
+  const todayKey = getTodayKey();
+  const timestamp = Date.now();
+
+  // Clean JSON Record Structure
+  const callRecord = {
+    id: id,
+    name: studentName,
+    classSection: classSection,
+    status: 0,
+    timestamp: timestamp,
+  };
 
   try {
-    const callsRef = db.ref("calls");
-    const newKey = callsRef.push().key;
+    const todayCallsRef = db.ref(`calls/${todayKey}`);
+    const newKey = todayCallsRef.push().key;
 
+    // Atomic write to today's dated nodes
     const updates = {};
-    updates[`calls/${newKey}`] = entry;
-    updates[`log/${newKey}`] = entry;
+    updates[`calls/${todayKey}/${newKey}`] = callRecord;
+    updates[`log/${todayKey}/${newKey}`] = callRecord;
 
     await db.ref().update(updates);
 

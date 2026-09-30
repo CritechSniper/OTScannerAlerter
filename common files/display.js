@@ -14,7 +14,17 @@ import {
 
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
-const callsRef = ref(db, "calls");
+
+function getTodayKey() {
+  const d = new Date();
+  const year = d.getFullYear();
+  const month = String(d.getMonth() + 1).padStart(2, "0");
+  const day = String(d.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+}
+
+const todayKey = getTodayKey();
+const callsRef = ref(db, `calls/${todayKey}`);
 
 let selectedVoice = null;
 function pickVoice() {
@@ -42,21 +52,6 @@ if (typeof window !== "undefined" && "speechSynthesis" in window) {
 }
 pickVoice();
 
-const PUSH_CHARS =
-  "-0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz";
-
-function pushIdToTime(pushId) {
-  if (!pushId || pushId.length < 8) return null;
-  let timestamp = 0;
-  for (let i = 0; i < 8; i++) {
-    const char = pushId.charAt(i);
-    const idx = PUSH_CHARS.indexOf(char);
-    if (idx === -1) return null;
-    timestamp = timestamp * 64 + idx;
-  }
-  return timestamp;
-}
-
 function formatTimestamp(ms) {
   if (!ms) return "";
   const d = new Date(ms);
@@ -83,13 +78,13 @@ function processSpeechQueue() {
 
   utterance.onend = () => {
     isSpeaking = false;
-    processSpeechQueue(); // Speak next item in queue
+    processSpeechQueue();
   };
 
   utterance.onerror = (e) => {
     console.error("Speech error:", e);
     isSpeaking = false;
-    processSpeechQueue(); // Skip and move to next on error
+    processSpeechQueue();
   };
 
   speechSynthesis.speak(utterance);
@@ -100,23 +95,28 @@ function queueSpeech(text) {
   processSpeechQueue();
 }
 
-function displayAnnouncement(entry, key, shouldSpeak = true) {
-  const [id, studentName, classSection, status = "0"] = entry.split("|");
+function displayAnnouncement(data, key, shouldSpeak = true) {
+  if (!data) return;
+
+  const id = data.id || "";
+  const studentName = data.name || "";
+  const classSection = data.classSection || "";
+  const status = Number(data.status) || 0;
+  const timestamp = data.timestamp || Date.now();
 
   if (shouldSpeak) {
     const textToSpeak = `${studentName}, ${classSection}.......${studentName}, ${classSection}.`;
     queueSpeech(textToSpeak);
   }
 
-  const ms = pushIdToTime(key);
-  const calledAt = ms ? formatTimestamp(ms) : "";
+  const calledAt = formatTimestamp(timestamp);
   const container = document.getElementById("calls");
 
   if (container) {
     const existingCard = document.getElementById(`card-${key}`);
-    const isReceived = status === "1";
+    const isReceived = status === 1;
 
-    // If card exists (e.g. state changed via Firebase update), update card in-place
+    // Update existing card on state change
     if (existingCard) {
       const dot = existingCard.querySelector(".status-dot");
       const btn = existingCard.querySelector(".confirm-btn");
@@ -125,10 +125,7 @@ function displayAnnouncement(entry, key, shouldSpeak = true) {
       if (btn) {
         btn.className = `confirm-btn ${isReceived ? "btn-reset" : "btn-depart"}`;
         btn.textContent = isReceived ? "Mark as Waiting" : "Confirm Departure";
-        btn.setAttribute(
-          "onclick",
-          `window.confirmDeparture('${key}', '${entry}')`,
-        );
+        btn.onclick = () => window.confirmDeparture(key, status);
       }
       return;
     }
@@ -145,7 +142,7 @@ function displayAnnouncement(entry, key, shouldSpeak = true) {
           <div id="drawer-${key}" class="action-drawer" style="display: none;" onclick="event.stopPropagation()">
             <button 
               class="confirm-btn ${isReceived ? "btn-reset" : "btn-depart"}" 
-              onclick="window.confirmDeparture('${key}', '${entry}')">
+              onclick="window.confirmDeparture('${key}', ${status})">
               ${isReceived ? "Mark as Waiting" : "Confirm Departure"}
             </button>
           </div>
@@ -155,7 +152,7 @@ function displayAnnouncement(entry, key, shouldSpeak = true) {
   }
 }
 
-// Global scope attachments for ES Module accessibility
+// Global scope attachments for DOM handlers
 window.toggleCardDrawer = function (key) {
   const drawer = document.getElementById(`drawer-${key}`);
   if (drawer) {
@@ -167,17 +164,13 @@ window.toggleCardDrawer = function (key) {
   }
 };
 
-window.confirmDeparture = function (key, currentEntry) {
-  const parts = currentEntry.split("|");
-  const currentStatus = parts[3] || "0";
-  const newStatus = currentStatus === "1" ? "0" : "1";
+window.confirmDeparture = function (key, currentStatus) {
+  const newStatus = Number(currentStatus) === 1 ? 0 : 1;
 
-  const updatedEntry = `${parts[0]}|${parts[1]}|${parts[2]}|${newStatus}`;
-
-  // Update both nodes in a single atomic write
+  // Targeted status update in both active calls and logs
   const updates = {};
-  updates[`calls/${key}`] = updatedEntry;
-  updates[`log/${key}`] = updatedEntry;
+  updates[`calls/${todayKey}/${key}/status`] = newStatus;
+  updates[`log/${todayKey}/${key}/status`] = newStatus;
 
   update(ref(db), updates);
 };
@@ -189,26 +182,25 @@ get(callsRef).then(() => {
   isInitialLoadFinished = true;
 });
 
-// Listener for NEW calls
+// Listener for NEW calls today
 onChildAdded(callsRef, (snapshot) => {
-  const entry = snapshot.val();
+  const data = snapshot.val();
   const key = snapshot.key;
 
-  if (typeof entry === "string" && entry.includes("|")) {
-    const createdMs = pushIdToTime(key);
+  if (data && typeof data === "object") {
     const isNew =
-      isInitialLoadFinished || (createdMs && createdMs > pageStartTime);
-    displayAnnouncement(entry, key, isNew);
+      isInitialLoadFinished || (data.timestamp && data.timestamp > pageStartTime);
+    displayAnnouncement(data, key, isNew);
   }
   cleanupOldCalls();
 });
 
-// Listener for STATUS UPDATES across screens (without re-speaking)
+// Listener for STATUS UPDATES across screens
 onChildChanged(callsRef, (snapshot) => {
-  const entry = snapshot.val();
+  const data = snapshot.val();
   const key = snapshot.key;
-  if (typeof entry === "string" && entry.includes("|")) {
-    displayAnnouncement(entry, key, false);
+  if (data && typeof data === "object") {
+    displayAnnouncement(data, key, false);
   }
 });
 
@@ -222,7 +214,7 @@ async function cleanupOldCalls() {
     });
     if (entries.length > 20) {
       const oldest = entries[0];
-      await remove(ref(db, `calls/${oldest.key}`));
+      await remove(ref(db, `calls/${todayKey}/${oldest.key}`));
     }
   }
 }
@@ -239,19 +231,21 @@ function updateClock() {
   }
 }
 
+// Auto-cleanup: Removes old dates under /calls while preserving /log
 async function checkAndResetCalls() {
-  const resetRef = ref(db, "lastReset");
-  const currentDay = new Date().toISOString().split("T")[0];
-
   try {
-    const snapshot = await get(resetRef);
-    if (!snapshot.exists() || snapshot.val() !== currentDay) {
-      await remove(ref(db, "calls"));
-      await set(resetRef, currentDay);
-      window.location.reload();
+    const allCallsSnap = await get(ref(db, "calls"));
+    if (allCallsSnap.exists()) {
+      const callsData = allCallsSnap.val();
+      for (const dateFolder in callsData) {
+        if (dateFolder !== todayKey) {
+          // Delete old daily active calls
+          await remove(ref(db, `calls/${dateFolder}`));
+        }
+      }
     }
   } catch (error) {
-    console.error("Reset error:", error);
+    console.error("Date cleanup error:", error);
   }
 }
 
@@ -264,6 +258,5 @@ window.clearFb = async function (path) {
   }
 };
 
-console.log("clearFb()");
 checkAndResetCalls();
 setInterval(updateClock, 1000);
